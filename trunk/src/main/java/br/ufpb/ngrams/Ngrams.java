@@ -42,7 +42,7 @@ public class Ngrams
 				{
 					symbol = content.substring(i, i + (j + 1));
 					
-					Node node = new Node(symbol, 0);
+					Node node = new Node(symbol);
 					
 					List<Node> ngram = ngrams.get(j);
 					int index = ngram.indexOf(node);

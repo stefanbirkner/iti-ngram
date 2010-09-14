@@ -3,12 +3,11 @@ package br.ufpb.ngrams;
 public class Node implements Comparable<Node>
 {
 	private String symbol;
-	private int amount;
+	private int amount = 0;
 	
-	public Node(String symbol, int amount)
+	public Node(String symbol)
 	{
 		this.symbol = symbol;
-		this.amount = amount;
 	}
 
 	public int getAmount()
