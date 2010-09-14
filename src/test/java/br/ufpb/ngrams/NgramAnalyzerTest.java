@@ -1,35 +1,49 @@
 package br.ufpb.ngrams;
 
+import static org.junit.Assert.assertArrayEquals;
+
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class NgramAnalyzerTest extends TestCase
+public class NgramAnalyzerTest
 {
-	public void testNgrams()
+	@Test
+	public void shouldReturnUnigrams()
 	{
+		NgramAnalyzer analyzer = createAnalyzerForAbcd();
+		List<Node> unigrams = analyzer.getNgramsOfLength(1);
+		assertNgramsAre(unigrams, "d", "c", "b", "a");
 	}
 
-	public void testGetNgrams()
+	@Test
+	public void shouldReturnBigrams()
 	{
-		String content = "abcd";
-		
-		List<List<Node>> ngrams = NgramAnalyzer.getNgrams(content, 3);
-		
-		List<Node> unigram = ngrams.get(0);
-		List<Node> bigram  = ngrams.get(1);
-		List<Node> trigram = ngrams.get(2);
-		
-		assertEquals("d", unigram.get(0).getSymbol());
-		assertEquals("c", unigram.get(1).getSymbol());
-		assertEquals("b", unigram.get(2).getSymbol());
-		assertEquals("a", unigram.get(3).getSymbol());
-		
-		assertEquals("cd", bigram.get(0).getSymbol());
-		assertEquals("bc", bigram.get(1).getSymbol());
-		assertEquals("ab", bigram.get(2).getSymbol());
-		
-		assertEquals("bcd", trigram.get(0).getSymbol());
-		assertEquals("abc", trigram.get(1).getSymbol());
+		NgramAnalyzer analyzer = createAnalyzerForAbcd();
+		List<Node> bigrams = analyzer.getNgramsOfLength(2);
+		assertNgramsAre(bigrams, "cd", "bc", "ab");
+	}
+
+	@Test
+	public void shouldReturnTrigrams()
+	{
+		NgramAnalyzer analyzer = createAnalyzerForAbcd();
+		List<Node> trigrams = analyzer.getNgramsOfLength(3);
+		assertNgramsAre(trigrams, "bcd", "abc");
+	}
+	
+	private NgramAnalyzer createAnalyzerForAbcd() {
+		return new NgramAnalyzer("abcd");
+	}
+	
+	private void assertNgramsAre(List<Node> ngrams, String... expectedNgrams)
+	{
+		String[] symbols = new String[ngrams.size()];
+		for (int i = 0; i < ngrams.size(); ++i)
+		{
+			symbols[i] = ngrams.get(i).getSymbol();
+		}
+
+		assertArrayEquals("Wrong ngrams.", expectedNgrams, symbols);
 	}
 }

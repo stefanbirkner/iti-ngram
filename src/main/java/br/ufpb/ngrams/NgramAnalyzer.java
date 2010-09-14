@@ -1,72 +1,64 @@
 package br.ufpb.ngrams;
 
+import static java.util.Collections.emptyList;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.JProgressBar;
-
-import br.ufpb.ngrams.gui.StatusBar;
-
 public class NgramAnalyzer
 {
-	public static List<List<Node>> getNgrams(String content, int n)
+	private final String text;
+	
+	public NgramAnalyzer(String text) {
+		this.text = text;
+	}
+
+	public List<Node> getNgramsOfLength(int n)
 	{
-		StatusBar.getInstance().setMessage("Processing characters...");
-		
-		List<List<Node>> ngrams = new ArrayList<List<Node>>();
-		
-		if (n < 1 || content == null)
+		if (n < 1 || text == null)
 		{
+			return emptyList();
+		}
+		else
+		{
+			List<Node> ngrams = calculateNgramsOfLength(n);
+			sortNgrams(ngrams);
 			return ngrams;
 		}
-		
-		for (int i = 1; i <= n; i++)
+	}
+	
+	private List<Node> calculateNgramsOfLength(int n)
+	{
+		List<Node> nodes = new ArrayList<Node>();
+		int length = text.length();
+		for (int i = 0; i < length - n + 1; i++)
 		{
-			List<Node> nodes = new ArrayList<Node>();
-			ngrams.add(nodes);
+			String ngram = text.substring(i, i + n);
+			Node node = createOrFindNodeWithNgram(nodes, ngram);
+			node.incrementAmountByOne();
 		}
-		
-		int length = content.length();
-		
-		JProgressBar progress = StatusBar.getInstance().getProgressBar();
-		progress.setMaximum(length);
-		
-		for (int i = 0; i < length; i++)
+		return nodes;
+	}
+	
+	private Node createOrFindNodeWithNgram(List<Node> existingNodes, String ngram)
+	{
+		Node node = new Node(ngram);
+		if (existingNodes.contains(node))
 		{
-			for (int j = 0; j < n; j++)
-			{
-				String symbol = null;
-				
-				if (i + j < length)
-				{
-					symbol = content.substring(i, i + (j + 1));
-					
-					Node node = new Node(symbol);
-					
-					List<Node> ngram = ngrams.get(j);
-					int index = ngram.indexOf(node);
-					
-					if (index < 0)
-					{
-						ngram.add(node);
-					}
-					else
-					{
-						node = ngram.get(index);
-					}
-					node.incrementAmountByOne();
-				}
-			}
-			progress.setValue(i + 1);
+			int index = existingNodes.indexOf(node);
+			return existingNodes.get(index);
 		}
-		
-		for (int i = 0; i < n; i++)
+		else
 		{
-			Collections.sort(ngrams.get(i));
-			Collections.reverse(ngrams.get(i));
+			existingNodes.add(node);
+			return node;
 		}
-		
-		return ngrams;
+	}
+
+	private void sortNgrams(List<Node> ngrams)
+	{
+			Collections.sort(ngrams);
+			Collections.reverse(ngrams);
 	}
 }
