@@ -49,14 +49,13 @@ public class Ngrams
 					
 					if (index < 0)
 					{
-						node.setAmount(1);
 						ngram.add(node);
 					}
 					else
 					{
 						node = ngram.get(index);
-						node.setAmount(node.getAmount() + 1);
 					}
+					node.incrementAmountByOne();
 				}
 			}
 			progress.setValue(i + 1);
