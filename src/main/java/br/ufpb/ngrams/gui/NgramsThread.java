@@ -40,12 +40,8 @@ public class NgramsThread extends Thread
 				tableModel.addRow(new String[] {String.valueOf(j), node.toString(), String.valueOf(Probability.getProbability(nodes, j))});
 			}
 			
-			JScrollPane scroll = new JScrollPane();
-			JTable table = new JTable(tableModel);
-			
-			scroll.getViewport().add(table);
-			OutputPanel.getInstance().getTabbedPane().add(String.format("%s-gram", n), scroll);
-			
+			String labelOfTable = String.format("%s-gram", n);
+			addTableWithLabel(tableModel, labelOfTable);
 			StatusBar.getInstance().getProgressBar().setValue(n);
 		}
 		
@@ -101,12 +97,7 @@ public class NgramsThread extends Thread
 		}
 
 		StatusBar.getInstance().setMessage("Generating conditional unigram output...");
-		
-		JScrollPane scroll = new JScrollPane();
-		JTable table = new JTable(tableModel);
-		
-		scroll.getViewport().add(table);
-		OutputPanel.getInstance().getTabbedPane().add(String.format("Conditional Unigram"), scroll);
+		addTableWithLabel(tableModel, "Conditional Unigram");
 	}
 	
 	public void conditionalBigram(String text)
@@ -169,12 +160,7 @@ public class NgramsThread extends Thread
 		}
 		
 		StatusBar.getInstance().setMessage("Generating conditional bigram output...");
-		
-		JScrollPane scroll = new JScrollPane();
-		JTable table = new JTable(tableModel);
-		
-		scroll.getViewport().add(table);
-		OutputPanel.getInstance().getTabbedPane().add(String.format("Conditional Bigram"), scroll);
+		addTableWithLabel(tableModel, "Conditional Bigram");
 	}
 
 	private DefaultTableModel createTableModelWithSecondColumnLabel(String label)
@@ -189,5 +175,13 @@ public class NgramsThread extends Thread
 	private DefaultTableModel createTableModelForConditionalNgrams()
 	{
 	  return createTableModelWithSecondColumnLabel("Condition");
+	}
+	
+	private void addTableWithLabel(DefaultTableModel model, String label)
+	{
+		JTable table = new JTable(model);
+		JScrollPane scroll = new JScrollPane();
+		scroll.getViewport().add(table);
+		OutputPanel.getInstance().getTabbedPane().add(label, scroll);
 	}
 }
