@@ -7,7 +7,7 @@ import org.junit.Test;
 public class NodeTest {
 	@Test
 	public void shouldHaveAmountOneAfterFirstIncrementing() {
-		Node node = new Node("dummy text", 0);
+		Node node = new Node("dummy text");
 		node.incrementAmountByOne();
 		assertEquals("Wrong amount.", 1, node.getAmount());
 	}

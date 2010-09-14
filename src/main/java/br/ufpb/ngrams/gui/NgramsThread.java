@@ -77,7 +77,7 @@ public class NgramsThread extends Thread
 			Node nodeb = ngrama.get(i);
 			for (Node nodea : ngrama)
 			{
-				Node referenceNode = new Node(nodeb.getSymbol() + nodea.getSymbol(), 0);
+				Node referenceNode = new Node(nodeb.getSymbol() + nodea.getSymbol());
 				int referenceIndex = ngramb.indexOf(referenceNode);
 				
 				float probability = 0;
@@ -134,7 +134,7 @@ public class NgramsThread extends Thread
 			Node nodeb = ngramb.get(i);
 			for (Node nodea : ngrama)
 			{
-				Node referenceNode = new Node(nodeb.getSymbol() + nodea.getSymbol(), 0);
+				Node referenceNode = new Node(nodeb.getSymbol() + nodea.getSymbol());
 				int referenceIndex = ngramc.indexOf(referenceNode);
 				
 				float probability = 0;
