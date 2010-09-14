@@ -20,16 +20,16 @@ public class NgramsThread extends Thread
 		
 		OutputPanel.getInstance().getTabbedPane().removeAll();
 		
-		String content = ContentPanel.getInstance().getTextArea().getText();
-		List<List<Node>> ngrams = NgramAnalyzer.getNgrams(content, 3);
+		String text = ContentPanel.getInstance().getTextArea().getText();
+		NgramAnalyzer analyzer = new NgramAnalyzer(text);
 		
 		StatusBar.getInstance().setMessage("Generating n-gram reports...");
 		
-		StatusBar.getInstance().getProgressBar().setMaximum(ngrams.size());
+		StatusBar.getInstance().getProgressBar().setMaximum(3);
 		
-		for (int i = 0; i < ngrams.size(); i++)
+		for (int i = 0; i < 3; i++)
 		{
-			List<Node> nodes = ngrams.get(i);
+			List<Node> nodes = analyzer.getNgramsOfLength(i);
 			
 			DefaultTableModel tableModel = new DefaultTableModel();
 			tableModel.addColumn(MainProperties.TABLE_ROWA);
@@ -51,18 +51,19 @@ public class NgramsThread extends Thread
 			StatusBar.getInstance().getProgressBar().setValue(i + 1);
 		}
 		
-		this.conditionalUnigram(ngrams, content);
-		this.conditionalBigram(ngrams, content);
+		conditionalUnigram(text);
+		conditionalBigram(text);
 		
 		StatusBar.getInstance().setMessage("Process complete!");
 	}
 	
-	public void conditionalUnigram(List<List<Node>> ngrams, String content)
+	public void conditionalUnigram(String text)
 	{
 		StatusBar.getInstance().setMessage("Generating conditional unigram...");
-		
-		List<Node> ngrama = ngrams.get(0);
-		List<Node> ngramb = ngrams.get(1);
+
+		NgramAnalyzer analyzer = new NgramAnalyzer(text);
+		List<Node> ngrama = analyzer.getNgramsOfLength(1);
+		List<Node> ngramb = analyzer.getNgramsOfLength(2);
 
 		DefaultTableModel tableModel = new DefaultTableModel();
 		tableModel.addColumn(MainProperties.TABLE_ROWA);
@@ -91,7 +92,7 @@ public class NgramsThread extends Thread
 					referenceNode = ngramb.get(referenceIndex);
 					int amounta = nodea.getAmount();
 					int amountb = referenceNode.getAmount();
-					if (content.endsWith(nodea.getSymbol())) { amounta--; };
+					if (text.endsWith(nodea.getSymbol())) { amounta--; };
 					if (amounta < 1) { probability = 0; }
 					else { probability = (float) amountb / amounta; }
 				}
@@ -113,13 +114,14 @@ public class NgramsThread extends Thread
 		OutputPanel.getInstance().getTabbedPane().add(String.format("Conditional Unigram"), scroll);
 	}
 	
-	public void conditionalBigram(List<List<Node>> ngrams, String content)
+	public void conditionalBigram(String text)
 	{
 		StatusBar.getInstance().setMessage("Generating conditional bigram...");
-		
-		List<Node> ngrama = ngrams.get(0);
-		List<Node> ngramb = ngrams.get(1);
-		List<Node> ngramc = ngrams.get(2);
+
+		NgramAnalyzer analyzer = new NgramAnalyzer(text);
+		List<Node> ngrama = analyzer.getNgramsOfLength(1);
+		List<Node> ngramb = analyzer.getNgramsOfLength(2);
+		List<Node> ngramc = analyzer.getNgramsOfLength(3);
 
 		DefaultTableModel tableModel = new DefaultTableModel();
 		tableModel.addColumn(MainProperties.TABLE_ROWA);
@@ -149,7 +151,7 @@ public class NgramsThread extends Thread
 					int amountb = nodeb.getAmount();
 					int amountc = referenceNode.getAmount();
 					
-					if (content.endsWith(nodeb.getSymbol()))
+					if (text.endsWith(nodeb.getSymbol()))
 					{
 						amountb--;
 					};
