@@ -1,8 +1,8 @@
-package br.ufpb.ngrams.gui;
+package br.ufpb.ngrams;
 
-import br.ufpb.ngrams.MainProperties;
+import br.ufpb.ngrams.gui.MainFrame;
 
-public class Main
+public class ItiNgram
 {
 	public static void main(String[] args)
 	{
