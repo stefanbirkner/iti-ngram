@@ -7,7 +7,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import br.ufpb.ngrams.MainProperties;
-import br.ufpb.ngrams.Ngrams;
+import br.ufpb.ngrams.NgramAnalyzer;
 import br.ufpb.ngrams.Node;
 import br.ufpb.ngrams.Probability;
 
@@ -21,7 +21,7 @@ public class NgramsThread extends Thread
 		OutputPanel.getInstance().getTabbedPane().removeAll();
 		
 		String content = ContentPanel.getInstance().getTextArea().getText();
-		List<List<Node>> ngrams = Ngrams.getNgrams(content, 3);
+		List<List<Node>> ngrams = NgramAnalyzer.getNgrams(content, 3);
 		
 		StatusBar.getInstance().setMessage("Generating n-gram reports...");
 		

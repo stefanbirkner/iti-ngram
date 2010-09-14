@@ -8,7 +8,7 @@ import javax.swing.JProgressBar;
 
 import br.ufpb.ngrams.gui.StatusBar;
 
-public class Ngrams
+public class NgramAnalyzer
 {
 	public static List<List<Node>> getNgrams(String content, int n)
 	{
