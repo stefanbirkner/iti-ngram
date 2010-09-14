@@ -4,7 +4,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-public class NgramsTest extends TestCase
+public class NgramAnalyzerTest extends TestCase
 {
 	public void testNgrams()
 	{
@@ -14,7 +14,7 @@ public class NgramsTest extends TestCase
 	{
 		String content = "abcd";
 		
-		List<List<Node>> ngrams = Ngrams.getNgrams(content, 3);
+		List<List<Node>> ngrams = NgramAnalyzer.getNgrams(content, 3);
 		
 		List<Node> unigram = ngrams.get(0);
 		List<Node> bigram  = ngrams.get(1);
