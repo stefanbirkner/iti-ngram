@@ -29,7 +29,7 @@ public class NgramsThread extends Thread
 		
 		for (int i = 0; i < 3; i++)
 		{
-			List<Node> nodes = analyzer.getNgramsOfLength(i);
+			List<Node> nodes = analyzer.getNgramsOfLength(i + 1);
 			
 			DefaultTableModel tableModel = new DefaultTableModel();
 			tableModel.addColumn(MainProperties.TABLE_ROWA);
