@@ -27,14 +27,12 @@ public class NgramsThread extends Thread
 		
 		StatusBar.getInstance().getProgressBar().setMaximum(3);
 		
-		for (int i = 0; i < 3; i++)
+		for (int n = 1; n < 4; n++)
 		{
-			List<Node> nodes = analyzer.getNgramsOfLength(i + 1);
+			List<Node> nodes = analyzer.getNgramsOfLength(n);
 			
-			DefaultTableModel tableModel = new DefaultTableModel();
-			tableModel.addColumn(MainProperties.TABLE_ROWA);
-			tableModel.addColumn(String.format(MainProperties.TABLE_ROWB, i + 1));
-			tableModel.addColumn(MainProperties.TABLE_ROWC);
+			String labelOfSecondColumn = String.format(MainProperties.TABLE_ROWB, n);
+			DefaultTableModel tableModel = createTableModelWithSecondColumnLabel(labelOfSecondColumn);
 			
 			for (int j = 0; j < nodes.size(); j++)
 			{
@@ -46,9 +44,9 @@ public class NgramsThread extends Thread
 			JTable table = new JTable(tableModel);
 			
 			scroll.getViewport().add(table);
-			OutputPanel.getInstance().getTabbedPane().add(String.format("%s-gram", (i + 1)), scroll);
+			OutputPanel.getInstance().getTabbedPane().add(String.format("%s-gram", n), scroll);
 			
-			StatusBar.getInstance().getProgressBar().setValue(i + 1);
+			StatusBar.getInstance().getProgressBar().setValue(n);
 		}
 		
 		conditionalUnigram(text);
@@ -65,10 +63,7 @@ public class NgramsThread extends Thread
 		List<Node> ngrama = analyzer.getNgramsOfLength(1);
 		List<Node> ngramb = analyzer.getNgramsOfLength(2);
 
-		DefaultTableModel tableModel = new DefaultTableModel();
-		tableModel.addColumn(MainProperties.TABLE_ROWA);
-		tableModel.addColumn("Condition");
-		tableModel.addColumn(MainProperties.TABLE_ROWC);
+		DefaultTableModel tableModel = createTableModelForConditionalNgrams();
 
 		StatusBar.getInstance().getProgressBar().setMaximum(ngrama.size());
 		
@@ -123,10 +118,7 @@ public class NgramsThread extends Thread
 		List<Node> ngramb = analyzer.getNgramsOfLength(2);
 		List<Node> ngramc = analyzer.getNgramsOfLength(3);
 
-		DefaultTableModel tableModel = new DefaultTableModel();
-		tableModel.addColumn(MainProperties.TABLE_ROWA);
-		tableModel.addColumn("Condition");
-		tableModel.addColumn(MainProperties.TABLE_ROWC);
+		DefaultTableModel tableModel = createTableModelForConditionalNgrams();
 
 		StatusBar.getInstance().getProgressBar().setMaximum(ngramb.size());
 		
@@ -183,5 +175,19 @@ public class NgramsThread extends Thread
 		
 		scroll.getViewport().add(table);
 		OutputPanel.getInstance().getTabbedPane().add(String.format("Conditional Bigram"), scroll);
+	}
+
+	private DefaultTableModel createTableModelWithSecondColumnLabel(String label)
+	{
+	  DefaultTableModel model = new DefaultTableModel();
+	  model.addColumn(MainProperties.TABLE_ROWA);
+	  model.addColumn(label);
+	  model.addColumn(MainProperties.TABLE_ROWC);
+	  return model;
+	}
+	
+	private DefaultTableModel createTableModelForConditionalNgrams()
+	{
+	  return createTableModelWithSecondColumnLabel("Condition");
 	}
 }
