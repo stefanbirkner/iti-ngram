@@ -11,11 +11,23 @@ public class Node implements Comparable<Node>
 		this.amount = amount;
 	}
 
-	public int getAmount() { return amount; }
-	public String getSymbol() { return symbol; }
+	public int getAmount()
+	{
+		return amount;
+	}
+	
+	void incrementAmountByOne()
+	{
+		++amount;
+	}
 
-	public void setAmount(int amount) { this.amount = amount; }
-	public void setSymbol(String symbol) { this.symbol = symbol; }
+	public String getSymbol() {
+		return symbol;
+	}
+
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
+	}
 
 	public int compareTo(Node node)
 	{
