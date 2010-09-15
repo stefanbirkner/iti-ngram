@@ -14,7 +14,7 @@ public class NgramAnalyzer
 		this.text = text;
 	}
 
-	public List<Node> getNgramsOfLength(int n)
+	public List<NGramCounter> getNgramsOfLength(int n)
 	{
 		if (n < 1 || text == null)
 		{
@@ -22,28 +22,28 @@ public class NgramAnalyzer
 		}
 		else
 		{
-			List<Node> ngrams = calculateNgramsOfLength(n);
+			List<NGramCounter> ngrams = calculateNgramsOfLength(n);
 			sortNgrams(ngrams);
 			return ngrams;
 		}
 	}
 	
-	private List<Node> calculateNgramsOfLength(int n)
+	private List<NGramCounter> calculateNgramsOfLength(int n)
 	{
-		List<Node> nodes = new ArrayList<Node>();
+		List<NGramCounter> nodes = new ArrayList<NGramCounter>();
 		int length = text.length();
 		for (int i = 0; i < length - n + 1; i++)
 		{
 			String ngram = text.substring(i, i + n);
-			Node node = createOrFindNodeWithNgram(nodes, ngram);
-			node.incrementAmountByOne();
+			NGramCounter node = createOrFindNodeWithNgram(nodes, ngram);
+			node.incrementCountByOne();
 		}
 		return nodes;
 	}
 	
-	private Node createOrFindNodeWithNgram(List<Node> existingNodes, String ngram)
+	private NGramCounter createOrFindNodeWithNgram(List<NGramCounter> existingNodes, String ngram)
 	{
-		Node node = new Node(ngram);
+		NGramCounter node = new NGramCounter(ngram);
 		if (existingNodes.contains(node))
 		{
 			int index = existingNodes.indexOf(node);
@@ -56,7 +56,7 @@ public class NgramAnalyzer
 		}
 	}
 
-	private void sortNgrams(List<Node> ngrams)
+	private void sortNgrams(List<NGramCounter> ngrams)
 	{
 			Collections.sort(ngrams);
 			Collections.reverse(ngrams);

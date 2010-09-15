@@ -7,8 +7,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import br.ufpb.ngrams.MainProperties;
+import br.ufpb.ngrams.NGramCounter;
 import br.ufpb.ngrams.NgramAnalyzer;
-import br.ufpb.ngrams.Node;
 import br.ufpb.ngrams.Probability;
 
 public class NgramsThread extends Thread
@@ -29,14 +29,14 @@ public class NgramsThread extends Thread
 		
 		for (int n = 1; n < 4; n++)
 		{
-			List<Node> nodes = analyzer.getNgramsOfLength(n);
+			List<NGramCounter> nodes = analyzer.getNgramsOfLength(n);
 			
 			String labelOfSecondColumn = String.format(MainProperties.TABLE_ROWB, n);
 			DefaultTableModel tableModel = createTableModelWithSecondColumnLabel(labelOfSecondColumn);
 			
 			for (int j = 0; j < nodes.size(); j++)
 			{
-				Node node = nodes.get(j);
+				NGramCounter node = nodes.get(j);
 				tableModel.addRow(new String[] {String.valueOf(j), node.toString(), String.valueOf(Probability.getProbability(nodes, j))});
 			}
 			
@@ -56,8 +56,8 @@ public class NgramsThread extends Thread
 		StatusBar.getInstance().setMessage("Generating conditional unigram...");
 
 		NgramAnalyzer analyzer = new NgramAnalyzer(text);
-		List<Node> ngrama = analyzer.getNgramsOfLength(1);
-		List<Node> ngramb = analyzer.getNgramsOfLength(2);
+		List<NGramCounter> ngrama = analyzer.getNgramsOfLength(1);
+		List<NGramCounter> ngramb = analyzer.getNgramsOfLength(2);
 
 		DefaultTableModel tableModel = createTableModelForConditionalNgrams();
 
@@ -66,10 +66,10 @@ public class NgramsThread extends Thread
 		int count = 0;
 		for (int i = 0; i < ngrama.size(); i++)
 		{
-			Node nodeb = ngrama.get(i);
-			for (Node nodea : ngrama)
+			NGramCounter nodeb = ngrama.get(i);
+			for (NGramCounter nodea : ngrama)
 			{
-				Node referenceNode = new Node(nodeb.getSymbol() + nodea.getSymbol());
+				NGramCounter referenceNode = new NGramCounter(nodeb.getNGram() + nodea.getNGram());
 				int referenceIndex = ngramb.indexOf(referenceNode);
 				
 				float probability = 0;
@@ -81,16 +81,16 @@ public class NgramsThread extends Thread
 				else
 				{
 					referenceNode = ngramb.get(referenceIndex);
-					int amounta = nodea.getAmount();
-					int amountb = referenceNode.getAmount();
-					if (text.endsWith(nodea.getSymbol())) { amounta--; };
+					int amounta = nodea.getCount();
+					int amountb = referenceNode.getCount();
+					if (text.endsWith(nodea.getNGram())) { amounta--; };
 					if (amounta < 1) { probability = 0; }
 					else { probability = (float) amountb / amounta; }
 				}
 				
 				tableModel.addRow(new String[] {
 					String.valueOf(count++),
-					String.format("P(%s|%s)", nodea.getSymbol(), nodeb.getSymbol()),
+					String.format("P(%s|%s)", nodea.getNGram(), nodeb.getNGram()),
 					String.valueOf(probability)});
 			}
 			StatusBar.getInstance().getProgressBar().setValue(i + 1);
@@ -105,9 +105,9 @@ public class NgramsThread extends Thread
 		StatusBar.getInstance().setMessage("Generating conditional bigram...");
 
 		NgramAnalyzer analyzer = new NgramAnalyzer(text);
-		List<Node> ngrama = analyzer.getNgramsOfLength(1);
-		List<Node> ngramb = analyzer.getNgramsOfLength(2);
-		List<Node> ngramc = analyzer.getNgramsOfLength(3);
+		List<NGramCounter> ngrama = analyzer.getNgramsOfLength(1);
+		List<NGramCounter> ngramb = analyzer.getNgramsOfLength(2);
+		List<NGramCounter> ngramc = analyzer.getNgramsOfLength(3);
 
 		DefaultTableModel tableModel = createTableModelForConditionalNgrams();
 
@@ -116,10 +116,10 @@ public class NgramsThread extends Thread
 		int count = 0;
 		for (int i = 0; i < ngramb.size(); i++)
 		{
-			Node nodeb = ngramb.get(i);
-			for (Node nodea : ngrama)
+			NGramCounter nodeb = ngramb.get(i);
+			for (NGramCounter nodea : ngrama)
 			{
-				Node referenceNode = new Node(nodeb.getSymbol() + nodea.getSymbol());
+				NGramCounter referenceNode = new NGramCounter(nodeb.getNGram() + nodea.getNGram());
 				int referenceIndex = ngramc.indexOf(referenceNode);
 				
 				float probability = 0;
@@ -131,10 +131,10 @@ public class NgramsThread extends Thread
 				else
 				{
 					referenceNode = ngramc.get(referenceIndex);
-					int amountb = nodeb.getAmount();
-					int amountc = referenceNode.getAmount();
+					int amountb = nodeb.getCount();
+					int amountc = referenceNode.getCount();
 					
-					if (text.endsWith(nodeb.getSymbol()))
+					if (text.endsWith(nodeb.getNGram()))
 					{
 						amountb--;
 					};
@@ -152,7 +152,7 @@ public class NgramsThread extends Thread
 				tableModel.addRow(new String[]
 	                             {
 									String.valueOf(count++),
-									String.format("P(%s|%s)", nodea.getSymbol(), nodeb.getSymbol()),
+									String.format("P(%s|%s)", nodea.getNGram(), nodeb.getNGram()),
 									String.valueOf(probability)
 								 });
 			}

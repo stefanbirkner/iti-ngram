@@ -9,33 +9,34 @@ public class ProbabilityTest extends TestCase
 {
 	public void testgetProbability()
 	{
-		List<Node> nodes = new ArrayList<Node>();
+		List<NGramCounter> counters = new ArrayList<NGramCounter>();
 		
-		addNodeWithAmount(nodes, 1);
-		addNodeWithAmount(nodes, 3);
-		addNodeWithAmount(nodes, 1);
-		addNodeWithAmount(nodes, 1);
+		addCounterWithAmount(counters, 1);
+		addCounterWithAmount(counters, 3);
+		addCounterWithAmount(counters, 1);
+		addCounterWithAmount(counters, 1);
 		
-		assertEquals(0.5f, Probability.getProbability(nodes, 1));
+		assertEquals(0.5f, Probability.getProbability(counters, 1));
 	}
 	
 	public void testGetSymbolsAmount()
 	{
-		List<Node> nodes = new ArrayList<Node>();
+		List<NGramCounter> counters = new ArrayList<NGramCounter>();
 		
-		addNodeWithAmount(nodes, 1);
-		addNodeWithAmount(nodes, 1);
-		addNodeWithAmount(nodes, 1);
+		addCounterWithAmount(counters, 1);
+		addCounterWithAmount(counters, 1);
+		addCounterWithAmount(counters, 1);
 		
-		assertEquals(3, Probability.getSymbolsAmount(nodes));
+		assertEquals(3, Probability.getSymbolsAmount(counters));
 	}
 	
-	private void addNodeWithAmount(List<Node> nodes, int amount) {
-		Node node = new Node("");
+	private void addCounterWithAmount(List<NGramCounter> counters, int amount)
+	{
+		NGramCounter counter = new NGramCounter("");
 		for (int i = 0; i < amount; ++i) {
-			node.incrementAmountByOne();
+			counter.incrementCountByOne();
 		}
 		
-		nodes.add(node);
+		counters.add(counter);
 	}
 }

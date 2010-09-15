@@ -12,36 +12,36 @@ public class NgramAnalyzerTest
 	public void shouldReturnUnigrams()
 	{
 		NgramAnalyzer analyzer = createAnalyzerForAbcd();
-		List<Node> unigrams = analyzer.getNgramsOfLength(1);
-		assertNgramsAre(unigrams, "d", "c", "b", "a");
+		List<NGramCounter> unigrams = analyzer.getNgramsOfLength(1);
+		assertCountersForNgrams(unigrams, "d", "c", "b", "a");
 	}
 
 	@Test
 	public void shouldReturnBigrams()
 	{
 		NgramAnalyzer analyzer = createAnalyzerForAbcd();
-		List<Node> bigrams = analyzer.getNgramsOfLength(2);
-		assertNgramsAre(bigrams, "cd", "bc", "ab");
+		List<NGramCounter> bigrams = analyzer.getNgramsOfLength(2);
+		assertCountersForNgrams(bigrams, "cd", "bc", "ab");
 	}
 
 	@Test
 	public void shouldReturnTrigrams()
 	{
 		NgramAnalyzer analyzer = createAnalyzerForAbcd();
-		List<Node> trigrams = analyzer.getNgramsOfLength(3);
-		assertNgramsAre(trigrams, "bcd", "abc");
+		List<NGramCounter> trigrams = analyzer.getNgramsOfLength(3);
+		assertCountersForNgrams(trigrams, "bcd", "abc");
 	}
 	
 	private NgramAnalyzer createAnalyzerForAbcd() {
 		return new NgramAnalyzer("abcd");
 	}
 	
-	private void assertNgramsAre(List<Node> ngrams, String... expectedNgrams)
+	private void assertCountersForNgrams(List<NGramCounter> counters, String... expectedNgrams)
 	{
-		String[] symbols = new String[ngrams.size()];
-		for (int i = 0; i < ngrams.size(); ++i)
+		String[] symbols = new String[counters.size()];
+		for (int i = 0; i < counters.size(); ++i)
 		{
-			symbols[i] = ngrams.get(i).getSymbol();
+			symbols[i] = counters.get(i).getNGram();
 		}
 
 		assertArrayEquals("Wrong ngrams.", expectedNgrams, symbols);
