@@ -3,8 +3,6 @@ package br.ufpb.ngrams;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-
 import org.junit.Test;
 
 public class NgramAnalyzerTest
@@ -13,7 +11,7 @@ public class NgramAnalyzerTest
 	public void shouldReturnUnigrams()
 	{
 		NgramAnalyzer analyzer = createAnalyzerForAbcd();
-		List<NGramCounter> unigrams = analyzer.getNgramsOfLength(1);
+		NGramCounter[] unigrams = analyzer.getNgramsOfLength(1);
 		assertCountersForNgrams(unigrams, "d", "c", "b", "a");
 	}
 
@@ -21,7 +19,7 @@ public class NgramAnalyzerTest
 	public void shouldReturnBigrams()
 	{
 		NgramAnalyzer analyzer = createAnalyzerForAbcd();
-		List<NGramCounter> bigrams = analyzer.getNgramsOfLength(2);
+		NGramCounter[] bigrams = analyzer.getNgramsOfLength(2);
 		assertCountersForNgrams(bigrams, "cd", "bc", "ab");
 	}
 
@@ -29,7 +27,7 @@ public class NgramAnalyzerTest
 	public void shouldReturnTrigrams()
 	{
 		NgramAnalyzer analyzer = createAnalyzerForAbcd();
-		List<NGramCounter> trigrams = analyzer.getNgramsOfLength(3);
+		NGramCounter[] trigrams = analyzer.getNgramsOfLength(3);
 		assertCountersForNgrams(trigrams, "bcd", "abc");
 	}
 	
@@ -37,9 +35,9 @@ public class NgramAnalyzerTest
 		return new NgramAnalyzer("abcd");
 	}
 	
-	private void assertCountersForNgrams(List<NGramCounter> counters, String... expectedNGrams)
+	private void assertCountersForNgrams(NGramCounter[] counters, String... expectedNGrams)
 	{
-	  assertEquals("Wrong number of counters.", expectedNGrams.length, counters.size());
+	  assertEquals("Wrong number of counters.", expectedNGrams.length, counters.length);
 		for (NGramCounter counter: counters)
 		{
 		  String nGram = counter.getNGram();
