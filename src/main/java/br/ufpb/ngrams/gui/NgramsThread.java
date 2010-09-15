@@ -14,14 +14,19 @@ import br.ufpb.ngrams.SortNGramCountersByCountsDescending;
 
 public class NgramsThread extends Thread
 {
+  private final String text;
+  
+  public NgramsThread(String text)
+  {
+    this.text = text;
+  }
+  
 	@Override
 	public void run()
 	{
 		super.run();
 		
 		OutputPanel.getInstance().getTabbedPane().removeAll();
-		
-		String text = ContentPanel.getInstance().getTextArea().getText();
 		NgramAnalyzer analyzer = new NgramAnalyzer(text);
 		
 		StatusBar.getInstance().setMessage("Generating n-gram reports...");
@@ -47,13 +52,13 @@ public class NgramsThread extends Thread
 			StatusBar.getInstance().getProgressBar().setValue(n);
 		}
 		
-		conditionalUnigram(text);
-		conditionalBigram(text);
+		conditionalUnigram();
+		conditionalBigram();
 		
 		StatusBar.getInstance().setMessage("Process complete!");
 	}
 	
-	public void conditionalUnigram(String text)
+	private void conditionalUnigram()
 	{
 		StatusBar.getInstance().setMessage("Generating conditional unigram...");
 
@@ -73,7 +78,7 @@ public class NgramsThread extends Thread
 			{
         String nGram = nodeb.getNGram() + nodea.getNGram();
         NGramCounter referenceCounter = getCounterWithNGram(ngramb, nGram);
-        float probability = getProbability(text, nodea, referenceCounter);
+        float probability = getProbability(nodea, referenceCounter);
         tableModel.addRow(new String[] {
 					String.valueOf(count++),
 					String.format("P(%s|%s)", nodea.getNGram(), nodeb.getNGram()),
@@ -86,7 +91,7 @@ public class NgramsThread extends Thread
 		addTableWithLabel(tableModel, "Conditional Unigram");
 	}
 	
-	public void conditionalBigram(String text)
+	private void conditionalBigram()
 	{
 		StatusBar.getInstance().setMessage("Generating conditional bigram...");
 
@@ -107,7 +112,7 @@ public class NgramsThread extends Thread
 			{
 				String nGram = nodeb.getNGram() + nodea.getNGram();
 				NGramCounter referenceCounter = getCounterWithNGram(ngramc, nGram);
-				float probability = getProbability(text, nodeb, referenceCounter);
+				float probability = getProbability(nodeb, referenceCounter);
 				tableModel.addRow(new String[] {
 									String.valueOf(count++),
 									String.format("P(%s|%s)", nodea.getNGram(), nodeb.getNGram()),
@@ -147,7 +152,7 @@ public class NgramsThread extends Thread
     return null;
   }
 	
-	private float getProbability(String text, NGramCounter counter, NGramCounter referenceCounter)
+	private float getProbability(NGramCounter counter, NGramCounter referenceCounter)
 	{
     if (referenceCounter == null)
     {
