@@ -1,9 +1,7 @@
 package br.ufpb.ngrams;
 
-import static java.util.Collections.emptyList;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NgramAnalyzer
 {
@@ -13,11 +11,11 @@ public class NgramAnalyzer
 		this.text = text;
 	}
 
-	public List<NGramCounter> getNgramsOfLength(int n)
+	public NGramCounter[] getNgramsOfLength(int n)
 	{
 		if (n < 1 || text == null)
 		{
-			return emptyList();
+			return new NGramCounter[0];
 		}
 		else
 		{
@@ -25,31 +23,27 @@ public class NgramAnalyzer
 		}
 	}
 	
-	private List<NGramCounter> calculateNgramsOfLength(int n)
+	private NGramCounter[] calculateNgramsOfLength(int n)
 	{
-		List<NGramCounter> nodes = new ArrayList<NGramCounter>();
+		Map<String, NGramCounter> countersForNGrams = new HashMap<String, NGramCounter>();
 		int length = text.length();
 		for (int i = 0; i < length - n + 1; i++)
 		{
-			String ngram = text.substring(i, i + n);
-			NGramCounter node = createOrFindNodeWithNgram(nodes, ngram);
-			node.incrementCountByOne();
+			String nGram = text.substring(i, i + n);
+			NGramCounter counters = createOrFindNodeWithNgram(countersForNGrams, nGram);
+			counters.incrementCountByOne();
 		}
-		return nodes;
+		return countersForNGrams.values().toArray(new NGramCounter[countersForNGrams.size()]);
 	}
 	
-	private NGramCounter createOrFindNodeWithNgram(List<NGramCounter> existingNodes, String ngram)
+	private NGramCounter createOrFindNodeWithNgram(Map<String, NGramCounter> countersForNGrams, String nGram)
 	{
-		NGramCounter node = new NGramCounter(ngram);
-		if (existingNodes.contains(node))
-		{
-			int index = existingNodes.indexOf(node);
-			return existingNodes.get(index);
-		}
-		else
-		{
-			existingNodes.add(node);
-			return node;
-		}
+	  NGramCounter counter = countersForNGrams.get(nGram);
+	  if (counter == null)
+	  {
+	    counter = new NGramCounter(nGram);
+	    countersForNGrams.put(nGram, counter);
+	  }
+	  return counter;
 	}
 }

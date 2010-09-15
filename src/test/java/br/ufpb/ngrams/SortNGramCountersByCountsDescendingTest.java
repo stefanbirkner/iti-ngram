@@ -29,7 +29,7 @@ public class SortNGramCountersByCountsDescendingTest {
   private static NGramCounter createCounterWithCount(int count)
   {
     NGramCounter counter  = new NGramCounter("");
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < count; ++i)
     {
       counter.incrementCountByOne();
     }

@@ -8,21 +8,18 @@ import br.ufpb.ngrams.gui.StatusBar;
 
 public abstract class Probability
 {
-	public static float getProbability(List<NGramCounter> NGramCounters, int index)
+	public static float getProbability(NGramCounter[] counters, int index)
 	{
-		NGramCounter NGramCounter = NGramCounters.get(index);
-		return (float) NGramCounter.getCount() / getSymbolsAmount(NGramCounters);
+		return (float) counters[index].getCount() / getSymbolsAmount(counters);
 	}
 	
-	public static long getSymbolsAmount(List<NGramCounter> NGramCounters)
+	public static long getSymbolsAmount(NGramCounter[] counters)
 	{
 		long amount = 0;
-		
-		for (NGramCounter NGramCounter : NGramCounters)
+		for (NGramCounter counter : counters)
 		{
-			amount += NGramCounter.getCount();
+			amount += counter.getCount();
 		}
-		
 		return amount;
 	}
 	

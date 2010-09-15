@@ -24,19 +24,6 @@ public class NGramCounter
 	{
 		return nGram;
 	}
-
-	@Override
-	public boolean equals(Object o)
-	{
-		if ((o instanceof NGramCounter) && ((NGramCounter)o).getNGram().equals(getNGram())) { return true; }
-		return false;
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		return nGram.hashCode();
-	}
 	
 	@Override
 	public String toString()
