@@ -1,5 +1,7 @@
 package br.ufpb.ngrams.gui;
 
+import static java.util.Collections.sort;
+
 import java.util.List;
 
 import javax.swing.JScrollPane;
@@ -10,6 +12,7 @@ import br.ufpb.ngrams.MainProperties;
 import br.ufpb.ngrams.NGramCounter;
 import br.ufpb.ngrams.NgramAnalyzer;
 import br.ufpb.ngrams.Probability;
+import br.ufpb.ngrams.SortNGramCountersByCountsDescending;
 
 public class NgramsThread extends Thread
 {
@@ -30,6 +33,7 @@ public class NgramsThread extends Thread
 		for (int n = 1; n < 4; n++)
 		{
 			List<NGramCounter> nodes = analyzer.getNgramsOfLength(n);
+			sort(nodes, new SortNGramCountersByCountsDescending());
 			
 			String labelOfSecondColumn = String.format(MainProperties.TABLE_ROWB, n);
 			DefaultTableModel tableModel = createTableModelWithSecondColumnLabel(labelOfSecondColumn);

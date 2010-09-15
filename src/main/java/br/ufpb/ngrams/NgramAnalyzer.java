@@ -3,7 +3,6 @@ package br.ufpb.ngrams;
 import static java.util.Collections.emptyList;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class NgramAnalyzer
@@ -22,9 +21,7 @@ public class NgramAnalyzer
 		}
 		else
 		{
-			List<NGramCounter> ngrams = calculateNgramsOfLength(n);
-			sortNgrams(ngrams);
-			return ngrams;
+			return calculateNgramsOfLength(n);
 		}
 	}
 	
@@ -54,11 +51,5 @@ public class NgramAnalyzer
 			existingNodes.add(node);
 			return node;
 		}
-	}
-
-	private void sortNgrams(List<NGramCounter> ngrams)
-	{
-			Collections.sort(ngrams);
-			Collections.reverse(ngrams);
 	}
 }

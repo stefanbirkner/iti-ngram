@@ -1,6 +1,7 @@
 package br.ufpb.ngrams;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -36,14 +37,23 @@ public class NgramAnalyzerTest
 		return new NgramAnalyzer("abcd");
 	}
 	
-	private void assertCountersForNgrams(List<NGramCounter> counters, String... expectedNgrams)
+	private void assertCountersForNgrams(List<NGramCounter> counters, String... expectedNGrams)
 	{
-		String[] symbols = new String[counters.size()];
-		for (int i = 0; i < counters.size(); ++i)
+	  assertEquals("Wrong number of counters.", expectedNGrams.length, counters.size());
+		for (NGramCounter counter: counters)
 		{
-			symbols[i] = counters.get(i).getNGram();
+		  String nGram = counter.getNGram();
+		  boolean nGramHasBeenExpected = false;
+		  for (String nGramUnderTest : expectedNGrams)
+		  {
+		    if (nGramUnderTest.equals(nGram))
+		    {
+		      nGramHasBeenExpected = true;
+		      break;
+		    }
+		  }
+		  
+		  assertTrue("N-gram '" + nGram + "' has not been expected.", nGramHasBeenExpected);
 		}
-
-		assertArrayEquals("Wrong ngrams.", expectedNgrams, symbols);
 	}
 }
