@@ -73,19 +73,8 @@ public class NgramsThread extends Thread
 			{
         String nGram = nodeb.getNGram() + nodea.getNGram();
         NGramCounter referenceCounter = getCounterWithNGram(ngramb, nGram);
-				
-				float probability = 0;
-				
-				if (referenceCounter != null)
-				{
-					int amounta = nodea.getCount();
-					int amountb = referenceCounter.getCount();
-					if (text.endsWith(nodea.getNGram())) { amounta--; };
-					if (amounta < 1) { probability = 0; }
-					else { probability = (float) amountb / amounta; }
-				}
-				
-				tableModel.addRow(new String[] {
+        float probability = getProbability(text, nodea, referenceCounter);
+        tableModel.addRow(new String[] {
 					String.valueOf(count++),
 					String.format("P(%s|%s)", nodea.getNGram(), nodeb.getNGram()),
 					String.valueOf(probability)});
@@ -118,31 +107,8 @@ public class NgramsThread extends Thread
 			{
 				String nGram = nodeb.getNGram() + nodea.getNGram();
 				NGramCounter referenceCounter = getCounterWithNGram(ngramc, nGram);
-				
-				float probability = 0;
-				
-				if (referenceCounter != null)
-				{
-					int amountb = nodeb.getCount();
-					int amountc = referenceCounter.getCount();
-					
-					if (text.endsWith(nodeb.getNGram()))
-					{
-						amountb--;
-					};
-					
-					if (amountb < 1)
-					{
-						probability = 0;
-					}
-					else
-					{
-						probability = (float) amountc / amountb;
-					}
-				}
-				
-				tableModel.addRow(new String[]
-	                             {
+				float probability = getProbability(text, nodeb, referenceCounter);
+				tableModel.addRow(new String[] {
 									String.valueOf(count++),
 									String.format("P(%s|%s)", nodea.getNGram(), nodeb.getNGram()),
 									String.valueOf(probability)
@@ -168,24 +134,42 @@ public class NgramsThread extends Thread
 	{
 	  return createTableModelWithSecondColumnLabel("Condition");
 	}
+  
+  private NGramCounter getCounterWithNGram(NGramCounter[] counters, String nGram)
+  {
+    for (int i = 0; i < counters.length; ++i)
+    {
+      if (counters[i].getNGram().equals(nGram))
+      {
+        return counters[i];
+      }
+    }
+    return null;
+  }
 	
+	private float getProbability(String text, NGramCounter counter, NGramCounter referenceCounter)
+	{
+    if (referenceCounter == null)
+    {
+      return 0;
+    }
+    else
+    {
+        int amountb = counter.getCount();
+        if (text.endsWith(counter.getNGram()))
+        {
+            amountb--;
+        }
+        
+        return (amountb < 1) ? 0 : (float) referenceCounter.getCount() / amountb;
+    }
+	}
+
 	private void addTableWithLabel(DefaultTableModel model, String label)
 	{
 		JTable table = new JTable(model);
 		JScrollPane scroll = new JScrollPane();
 		scroll.getViewport().add(table);
 		OutputPanel.getInstance().getTabbedPane().add(label, scroll);
-	}
-	
-	private NGramCounter getCounterWithNGram(NGramCounter[] counters, String nGram)
-	{
-	  for (int i = 0; i < counters.length; ++i)
-	  {
-	    if (counters[i].getNGram().equals(nGram))
-	    {
-	      return counters[i];
-	    }
-	  }
-	  return null;
 	}
 }
