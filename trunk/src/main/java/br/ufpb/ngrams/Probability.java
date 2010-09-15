@@ -8,33 +8,33 @@ import br.ufpb.ngrams.gui.StatusBar;
 
 public abstract class Probability
 {
-	public static float getProbability(List<Node> nodes, int index)
+	public static float getProbability(List<NGramCounter> NGramCounters, int index)
 	{
-		Node node = nodes.get(index);
-		return (float) node.getAmount() / getSymbolsAmount(nodes);
+		NGramCounter NGramCounter = NGramCounters.get(index);
+		return (float) NGramCounter.getCount() / getSymbolsAmount(NGramCounters);
 	}
 	
-	public static long getSymbolsAmount(List<Node> nodes)
+	public static long getSymbolsAmount(List<NGramCounter> NGramCounters)
 	{
 		long amount = 0;
 		
-		for (Node node : nodes)
+		for (NGramCounter NGramCounter : NGramCounters)
 		{
-			amount += node.getAmount();
+			amount += NGramCounter.getCount();
 		}
 		
 		return amount;
 	}
 	
-	public static float getConditionalProbability(Node nodea, Node nodeb, boolean end)
+	public static float getConditionalProbability(NGramCounter NGramCountera, NGramCounter NGramCounterb, boolean end)
 	{
 		int amounta = 0;
-		int amountb = nodeb.getAmount();
+		int amountb = NGramCounterb.getCount();
 		
 		if (end) { amountb--; }
 		if (amountb < 1) { return 0; }
 		
-		if (nodeb.getSymbol().endsWith(nodeb.getSymbol()))
+		if (NGramCounterb.getNGram().endsWith(NGramCounterb.getNGram()))
 		{
 			amounta = amountb;
 		}
@@ -42,24 +42,24 @@ public abstract class Probability
 		return amounta / amountb;
 	}
 	
-	public static List<ConditionalNode> getConditionalUnigram(List<List<Node>> ngrams, String content)
+	public static List<ConditionalNode> getConditionalUnigram(List<List<NGramCounter>> ngrams, String content)
 	{
 		StatusBar.getInstance().setMessage("Generating conditional unigram...");
 		
-		List<Node> ngrama = ngrams.get(0);
-		List<Node> ngramb = ngrams.get(1);
+		List<NGramCounter> ngrama = ngrams.get(0);
+		List<NGramCounter> ngramb = ngrams.get(1);
 		
-		List<ConditionalNode> nodes = new ArrayList<ConditionalNode>();
+		List<ConditionalNode> NGramCounters = new ArrayList<ConditionalNode>();
 
 		StatusBar.getInstance().getProgressBar().setMaximum(ngrama.size());
 		
 		for (int i = 0; i < ngrama.size(); i++)
 		{
-			Node nodeb = ngrama.get(i);
-			for (Node nodea : ngrama)
+			NGramCounter NGramCounterb = ngrama.get(i);
+			for (NGramCounter NGramCountera : ngrama)
 			{
-				Node referenceNode = new Node(nodeb.getSymbol() + nodea.getSymbol());
-				int referenceIndex = ngramb.indexOf(referenceNode);
+				NGramCounter referenceNGramCounter = new NGramCounter(NGramCounterb.getNGram() + NGramCountera.getNGram());
+				int referenceIndex = ngramb.indexOf(referenceNGramCounter);
 				
 				float probability = 0;
 				
@@ -68,11 +68,11 @@ public abstract class Probability
 				}
 				else
 				{
-					referenceNode = ngramb.get(referenceIndex);
-					int amounta = nodea.getAmount();
-					int amountb = referenceNode.getAmount();
+					referenceNGramCounter = ngramb.get(referenceIndex);
+					int amounta = NGramCountera.getCount();
+					int amountb = referenceNGramCounter.getCount();
 					
-					if (content.endsWith(nodea.getSymbol())) {
+					if (content.endsWith(NGramCountera.getNGram())) {
 						amounta--;
 					};
 					
@@ -84,36 +84,36 @@ public abstract class Probability
 					}
 				}
 				
-				nodes.add(new ConditionalNode(nodea.getSymbol(), nodeb.getSymbol(), probability));
+				NGramCounters.add(new ConditionalNode(NGramCountera.getNGram(), NGramCounterb.getNGram(), probability));
 			}
 			StatusBar.getInstance().getProgressBar().setValue(i + 1);
 		}
 		
-		Collections.sort(nodes);
-		Collections.reverse(nodes);
+		Collections.sort(NGramCounters);
+		Collections.reverse(NGramCounters);
 		
-		return nodes;
+		return NGramCounters;
 	}
 	
-	public static List<ConditionalNode> getConditionalBigram(List<List<Node>> ngrams, String content)
+	public static List<ConditionalNode> getConditionalBigram(List<List<NGramCounter>> ngrams, String content)
 	{
 		StatusBar.getInstance().setMessage("Generating conditional bigram...");
 		
-		List<Node> ngrama = ngrams.get(0);
-		List<Node> ngramb = ngrams.get(1);
-		List<Node> ngramc = ngrams.get(2);
+		List<NGramCounter> ngrama = ngrams.get(0);
+		List<NGramCounter> ngramb = ngrams.get(1);
+		List<NGramCounter> ngramc = ngrams.get(2);
 		
-		List<ConditionalNode> nodes = new ArrayList<ConditionalNode>();
+		List<ConditionalNode> NGramCounters = new ArrayList<ConditionalNode>();
 
 		StatusBar.getInstance().getProgressBar().setMaximum(ngramb.size());
 		
 		for (int i = 0; i < ngramb.size(); i++)
 		{
-			Node nodeb = ngramb.get(i);
-			for (Node nodea : ngrama)
+			NGramCounter NGramCounterb = ngramb.get(i);
+			for (NGramCounter NGramCountera : ngrama)
 			{
-				Node referenceNode = new Node(nodeb.getSymbol() + nodea.getSymbol());
-				int referenceIndex = ngramc.indexOf(referenceNode);
+				NGramCounter referenceNGramCounter = new NGramCounter(NGramCounterb.getNGram() + NGramCountera.getNGram());
+				int referenceIndex = ngramc.indexOf(referenceNGramCounter);
 				
 				float probability = 0;
 				
@@ -122,11 +122,11 @@ public abstract class Probability
 				}
 				else
 				{
-					referenceNode = ngramc.get(referenceIndex);
-					int amountb = nodeb.getAmount();
-					int amountc = referenceNode.getAmount();
+					referenceNGramCounter = ngramc.get(referenceIndex);
+					int amountb = NGramCounterb.getCount();
+					int amountc = referenceNGramCounter.getCount();
 					
-					if (content.endsWith(nodeb.getSymbol())) {
+					if (content.endsWith(NGramCounterb.getNGram())) {
 						amountb--;
 					};
 					
@@ -138,14 +138,14 @@ public abstract class Probability
 					}
 				}
 				
-				nodes.add(new ConditionalNode(nodea.getSymbol(), nodeb.getSymbol(), probability));
+				NGramCounters.add(new ConditionalNode(NGramCountera.getNGram(), NGramCounterb.getNGram(), probability));
 			}
 			StatusBar.getInstance().getProgressBar().setValue(i + 1);
 		}
 		
-		Collections.sort(nodes);
-		Collections.reverse(nodes);
+		Collections.sort(NGramCounters);
+		Collections.reverse(NGramCounters);
 		
-		return nodes;
+		return NGramCounters;
 	}
 }
