@@ -21,12 +21,6 @@ public class MainProperties
 	public static final String MENU_HELP = getProperty("ngrams.menu.help");
 	public static final String MENU_HELP_ABOUT = getProperty("ngrams.menu.help.about");
 	
-	public static final String ICON_FOLDER = getProperty("ngrams.icons.folder");
-	public static final String ICON_START = getProperty("ngrams.icons.start");
-	public static final String ICON_VALIDATE = getProperty("ngrams.icons.validate");
-	public static final String ICON_NGRAMS = getProperty("ngrams.icons.ngrams");
-	public static final String ICON_SETUP = getProperty("ngrams.icons.setup");
-	
 	public static final String LABEL_IGNORELETTERS = getProperty("ngrams.labels.ignoreletters");
 	public static final String LABEL_IGNOREDIGITS = getProperty("ngrams.labels.ignoredigits");
 	public static final String LABEL_IGNOREWHITESPACES = getProperty("ngrams.labels.ignorewhitespaces");
@@ -47,6 +41,11 @@ public class MainProperties
 	
 	private MainProperties()
 	{
+	}
+	
+	public static String getToolTipTextForButton(String name)
+	{
+    return getProperty("ngrams.button." + name + ".toolTipText");
 	}
 	
 	private static String getProperty(String name)
