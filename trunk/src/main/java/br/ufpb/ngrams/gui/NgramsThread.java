@@ -63,25 +63,26 @@ public class NgramsThread extends Thread
 		StatusBar.getInstance().setMessage("Generating conditional unigram...");
 
 		NgramAnalyzer analyzer = new NgramAnalyzer(text);
-		NGramCounter[] ngrama = analyzer.getNgramsOfLength(1);
-		NGramCounter[] ngramb = analyzer.getNgramsOfLength(2);
+		NGramCounter[] unigramCounters = analyzer.getNgramsOfLength(1);
+		NGramCounter[] bigramCounters = analyzer.getNgramsOfLength(2);
 
 		DefaultTableModel tableModel = createTableModelForConditionalNgrams();
 
-		StatusBar.getInstance().getProgressBar().setMaximum(ngrama.length);
+		StatusBar.getInstance().getProgressBar().setMaximum(unigramCounters.length);
 		
 		int count = 0;
-		for (int i = 0; i < ngrama.length; i++)
+		for (int i = 0; i < unigramCounters.length; i++)
 		{
-			NGramCounter nodeb = ngrama[i];
-			for (NGramCounter nodea : ngrama)
+			String unigram = unigramCounters[i].getNGram();
+			for (NGramCounter unigramCounter : unigramCounters)
 			{
-        String nGram = nodeb.getNGram() + nodea.getNGram();
-        NGramCounter referenceCounter = getCounterWithNGram(ngramb, nGram);
-        float probability = getProbability(nodea, referenceCounter);
+        String bigram = unigram + unigramCounter.getNGram();
+        NGramCounter bigramCounter = getCounterWithNGram(bigramCounters, bigram);
+        float probability = getProbabilityThatFirstNGramIsPrefixOfSecondNGram(
+            unigramCounter, bigramCounter);
         tableModel.addRow(new String[] {
 					String.valueOf(count++),
-					String.format("P(%s|%s)", nodea.getNGram(), nodeb.getNGram()),
+					String.format("P(%s|%s)", unigramCounter.getNGram(), unigram),
 					String.valueOf(probability)});
 			}
 			StatusBar.getInstance().getProgressBar().setValue(i + 1);
@@ -96,26 +97,27 @@ public class NgramsThread extends Thread
 		StatusBar.getInstance().setMessage("Generating conditional bigram...");
 
 		NgramAnalyzer analyzer = new NgramAnalyzer(text);
-		NGramCounter[] ngrama = analyzer.getNgramsOfLength(1);
-		NGramCounter[] ngramb = analyzer.getNgramsOfLength(2);
-		NGramCounter[] ngramc = analyzer.getNgramsOfLength(3);
+		NGramCounter[] unigramCounters = analyzer.getNgramsOfLength(1);
+		NGramCounter[] bigramCounters = analyzer.getNgramsOfLength(2);
+		NGramCounter[] trigramCounters = analyzer.getNgramsOfLength(3);
 
 		DefaultTableModel tableModel = createTableModelForConditionalNgrams();
 
-		StatusBar.getInstance().getProgressBar().setMaximum(ngramb.length);
+		StatusBar.getInstance().getProgressBar().setMaximum(bigramCounters.length);
 		
 		int count = 0;
-		for (int i = 0; i < ngramb.length; i++)
+		for (int i = 0; i < bigramCounters.length; i++)
 		{
-			NGramCounter nodeb = ngramb[i];
-			for (NGramCounter nodea : ngrama)
+			for (NGramCounter nodea : unigramCounters)
 			{
-				String nGram = nodeb.getNGram() + nodea.getNGram();
-				NGramCounter referenceCounter = getCounterWithNGram(ngramc, nGram);
-				float probability = getProbability(nodeb, referenceCounter);
+			  String unigram = nodea.getNGram();
+				String trigram = bigramCounters[i].getNGram() + unigram;
+				NGramCounter trigramCounter = getCounterWithNGram(trigramCounters, trigram);
+				float probability = getProbabilityThatFirstNGramIsPrefixOfSecondNGram(
+				    bigramCounters[i], trigramCounter);
 				tableModel.addRow(new String[] {
 									String.valueOf(count++),
-									String.format("P(%s|%s)", nodea.getNGram(), nodeb.getNGram()),
+									String.format("P(%s|%s)", unigram, bigramCounters[i].getNGram()),
 									String.valueOf(probability)
 								 });
 			}
@@ -152,21 +154,21 @@ public class NgramsThread extends Thread
     return null;
   }
 	
-	private float getProbability(NGramCounter counter, NGramCounter referenceCounter)
+	private float getProbabilityThatFirstNGramIsPrefixOfSecondNGram(NGramCounter prefixCounter, NGramCounter secondCounter)
 	{
-    if (referenceCounter == null)
+    if (secondCounter == null)
     {
       return 0;
     }
     else
     {
-        int amountb = counter.getCount();
-        if (text.endsWith(counter.getNGram()))
+        int prefixCount = prefixCounter.getCount();
+        if (text.endsWith(prefixCounter.getNGram()))
         {
-            amountb--;
+          --prefixCount;
         }
         
-        return (amountb < 1) ? 0 : (float) referenceCounter.getCount() / amountb;
+        return (prefixCount == 0) ? 0 : (float) secondCounter.getCount() / prefixCount;
     }
 	}
 
