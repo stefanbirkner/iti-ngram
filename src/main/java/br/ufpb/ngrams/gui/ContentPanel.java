@@ -1,17 +1,17 @@
 package br.ufpb.ngrams.gui;
 
 import java.awt.GridLayout;
-import java.awt.TextArea;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 public class ContentPanel extends JPanel
 {
 	private static final long serialVersionUID = 1093998575730432278L;
 	
 	private static ContentPanel instance = null;
-	private TextArea textArea;
+	private JTextArea textArea;
 	private JScrollPane scrollPane;
 	
 	private ContentPanel() {
@@ -42,10 +42,10 @@ public class ContentPanel extends JPanel
 		return scrollPane;
 	}
 	
-	public TextArea getTextArea()
+	public JTextArea getTextArea()
 	{
 		if (textArea == null) {
-			textArea = new TextArea();
+			textArea = new JTextArea();
 		}
 		return textArea;
 	}
