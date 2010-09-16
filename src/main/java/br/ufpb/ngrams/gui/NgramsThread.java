@@ -3,6 +3,7 @@ package br.ufpb.ngrams.gui;
 import static java.util.Arrays.sort;
 import static java.util.Collections.sort;
 
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import br.ufpb.ngrams.SortNGramCountersByCountsDescending;
 
 public class NgramsThread extends Thread
 {
+  private static final Font FIXED_WIDTH_FONT = new Font( "Monospaced", Font.PLAIN, 12 );
   private final String text;
   
   public NgramsThread(String text)
@@ -173,6 +175,8 @@ public class NgramsThread extends Thread
 	private void addTableWithLabel(DefaultTableModel model, String label)
 	{
 		JTable table = new JTable(model);
+		table.setFont(FIXED_WIDTH_FONT);
+
 		JScrollPane scroll = new JScrollPane();
 		scroll.getViewport().add(table);
 		OutputPanel.getInstance().getTabbedPane().add(label, scroll);
