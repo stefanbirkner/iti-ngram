@@ -6,6 +6,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import br.ufpb.ngrams.ConditionalNGram;
 import br.ufpb.ngrams.MainProperties;
 import br.ufpb.ngrams.NGramCounter;
 import br.ufpb.ngrams.NgramAnalyzer;
@@ -78,12 +79,12 @@ public class NgramsThread extends Thread
 			{
         String bigram = unigram + unigramCounter.getNGram();
         NGramCounter bigramCounter = getCounterWithNGram(bigramCounters, bigram);
-        float probability = getProbabilityThatFirstNGramIsPrefixOfSecondNGram(
-            unigramCounter, bigramCounter);
+        ConditionalNGram conditionalNGram = new ConditionalNGram(unigramCounter, bigramCounter);
         tableModel.addRow(new String[] {
 					String.valueOf(count++),
 					String.format("P(%s|%s)", unigramCounter.getNGram(), unigram),
-					String.valueOf(probability)});
+          Float.toString(conditionalNGram.getProbability())
+        });
 			}
 			StatusBar.getInstance().getProgressBar().setValue(i + 1);
 		}
@@ -113,13 +114,12 @@ public class NgramsThread extends Thread
 			  String unigram = nodea.getNGram();
 				String trigram = bigramCounters[i].getNGram() + unigram;
 				NGramCounter trigramCounter = getCounterWithNGram(trigramCounters, trigram);
-				float probability = getProbabilityThatFirstNGramIsPrefixOfSecondNGram(
-				    bigramCounters[i], trigramCounter);
+				ConditionalNGram conditionalNGram = new ConditionalNGram(bigramCounters[i], trigramCounter);
 				tableModel.addRow(new String[] {
-									String.valueOf(count++),
-									String.format("P(%s|%s)", unigram, bigramCounters[i].getNGram()),
-									String.valueOf(probability)
-								 });
+				    String.valueOf(count++),
+				    String.format("P(%s|%s)", unigram, bigramCounters[i].getNGram()),
+				    Float.toString(conditionalNGram.getProbability())
+				});
 			}
 			StatusBar.getInstance().getProgressBar().setValue(i + 1);
 		}
@@ -153,24 +153,6 @@ public class NgramsThread extends Thread
     }
     return null;
   }
-	
-	private float getProbabilityThatFirstNGramIsPrefixOfSecondNGram(NGramCounter prefixCounter, NGramCounter secondCounter)
-	{
-    if (secondCounter == null)
-    {
-      return 0;
-    }
-    else
-    {
-        int prefixCount = prefixCounter.getCount();
-        if (text.endsWith(prefixCounter.getNGram()))
-        {
-          --prefixCount;
-        }
-        
-        return (prefixCount == 0) ? 0 : (float) secondCounter.getCount() / prefixCount;
-    }
-	}
 
 	private void addTableWithLabel(DefaultTableModel model, String label)
 	{
