@@ -9,6 +9,17 @@ public class ConditionalNGram {
     this.counterOfExtendedNGram = counterOfExtendedNGram;
   }
   
+  public String getBaseNGram()
+  {
+    return counter.getNGram();
+  }
+  
+  public String getAppendedCharacters()
+  {
+    int beginOfAppendedCharacters = getBaseNGram().length();
+    return counterOfExtendedNGram.getNGram().substring(beginOfAppendedCharacters);
+  }
+
   public float getProbability()
   {
     if (counterOfExtendedNGram == null)

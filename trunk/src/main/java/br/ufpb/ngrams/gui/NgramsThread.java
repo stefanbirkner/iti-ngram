@@ -1,6 +1,10 @@
 package br.ufpb.ngrams.gui;
 
 import static java.util.Arrays.sort;
+import static java.util.Collections.sort;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -11,6 +15,7 @@ import br.ufpb.ngrams.MainProperties;
 import br.ufpb.ngrams.NGramCounter;
 import br.ufpb.ngrams.NgramAnalyzer;
 import br.ufpb.ngrams.Probability;
+import br.ufpb.ngrams.SortConditionalNGramsByProbabilityDescending;
 import br.ufpb.ngrams.SortNGramCountersByCountsDescending;
 
 public class NgramsThread extends Thread
@@ -67,28 +72,26 @@ public class NgramsThread extends Thread
 		NGramCounter[] unigramCounters = analyzer.getNgramsOfLength(1);
 		NGramCounter[] bigramCounters = analyzer.getNgramsOfLength(2);
 
-		DefaultTableModel tableModel = createTableModelForConditionalNgrams();
-
 		StatusBar.getInstance().getProgressBar().setMaximum(unigramCounters.length);
-		
-		int count = 0;
-		for (int i = 0; i < unigramCounters.length; i++)
-		{
-			String unigram = unigramCounters[i].getNGram();
-			for (NGramCounter unigramCounter : unigramCounters)
-			{
+
+    List<ConditionalNGram> conditionalNGrams = new ArrayList<ConditionalNGram>();
+    for (int i = 0; i < unigramCounters.length; i++)
+    {
+      String unigram = unigramCounters[i].getNGram();
+      for (NGramCounter unigramCounter : unigramCounters)
+      {
         String bigram = unigram + unigramCounter.getNGram();
         NGramCounter bigramCounter = getCounterWithNGram(bigramCounters, bigram);
-        ConditionalNGram conditionalNGram = new ConditionalNGram(unigramCounter, bigramCounter);
-        tableModel.addRow(new String[] {
-					String.valueOf(count++),
-					String.format("P(%s|%s)", unigramCounter.getNGram(), unigram),
-          Float.toString(conditionalNGram.getProbability())
-        });
-			}
-			StatusBar.getInstance().getProgressBar().setValue(i + 1);
-		}
+        if (bigramCounter != null)
+        {
+          ConditionalNGram conditionalNGram = new ConditionalNGram(unigramCounter, bigramCounter);
+          conditionalNGrams.add(conditionalNGram);
+        }
+      }
+      StatusBar.getInstance().getProgressBar().setValue(i + 1);
+    }
 
+    DefaultTableModel tableModel = createTableForConditionalNGrams(conditionalNGrams);
 		StatusBar.getInstance().setMessage("Generating conditional unigram output...");
 		addTableWithLabel(tableModel, "Conditional Unigram");
 	}
@@ -102,30 +105,43 @@ public class NgramsThread extends Thread
 		NGramCounter[] bigramCounters = analyzer.getNgramsOfLength(2);
 		NGramCounter[] trigramCounters = analyzer.getNgramsOfLength(3);
 
-		DefaultTableModel tableModel = createTableModelForConditionalNgrams();
-
 		StatusBar.getInstance().getProgressBar().setMaximum(bigramCounters.length);
 		
-		int count = 0;
+		List<ConditionalNGram> conditionalNGrams = new ArrayList<ConditionalNGram>();
 		for (int i = 0; i < bigramCounters.length; i++)
 		{
-			for (NGramCounter nodea : unigramCounters)
+			for (NGramCounter unigramCounter : unigramCounters)
 			{
-			  String unigram = nodea.getNGram();
+			  String unigram = unigramCounter.getNGram();
 				String trigram = bigramCounters[i].getNGram() + unigram;
 				NGramCounter trigramCounter = getCounterWithNGram(trigramCounters, trigram);
-				ConditionalNGram conditionalNGram = new ConditionalNGram(bigramCounters[i], trigramCounter);
-				tableModel.addRow(new String[] {
-				    String.valueOf(count++),
-				    String.format("P(%s|%s)", unigram, bigramCounters[i].getNGram()),
-				    Float.toString(conditionalNGram.getProbability())
-				});
+				if (trigramCounter != null)
+				{
+				  ConditionalNGram conditionalNGram = new ConditionalNGram(bigramCounters[i], trigramCounter);
+				  conditionalNGrams.add(conditionalNGram);
+				}
 			}
 			StatusBar.getInstance().getProgressBar().setValue(i + 1);
 		}
-		
+
+    DefaultTableModel tableModel = createTableForConditionalNGrams(conditionalNGrams);
 		StatusBar.getInstance().setMessage("Generating conditional bigram output...");
 		addTableWithLabel(tableModel, "Conditional Bigram");
+	}
+
+	private DefaultTableModel createTableForConditionalNGrams(List<ConditionalNGram> conditionalNGrams)
+	{
+    DefaultTableModel tableModel = createTableModelForConditionalNgrams();
+	  sort(conditionalNGrams, new SortConditionalNGramsByProbabilityDescending());
+	  int position = 1;
+	  for (ConditionalNGram conditionalNGram : conditionalNGrams)
+	  {
+	    String text = conditionalNGram.getAppendedCharacters() + " after " + conditionalNGram.getBaseNGram();
+	    Object[] rowData = { position, text, conditionalNGram.getProbability() };
+	    tableModel.addRow(rowData);
+	    ++position;
+	  }
+	  return tableModel;
 	}
 
 	private DefaultTableModel createTableModelWithSecondColumnLabel(String label)
