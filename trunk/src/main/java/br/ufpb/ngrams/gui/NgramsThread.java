@@ -6,7 +6,9 @@ import static java.util.Collections.sort;
 import java.awt.Font;
 import java.util.List;
 
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -23,40 +25,42 @@ public class NgramsThread extends Thread
 {
   private static final Font FIXED_WIDTH_FONT = new Font( "Monospaced", Font.PLAIN, 12 );
   private final String text;
+  private final JTabbedPane panel;
+  private final StatusBar statusBar;
   
-  public NgramsThread(String text)
+  public NgramsThread(String text, JTabbedPane panel, StatusBar statusBar)
   {
     this.text = text;
+    this.panel = panel;
+    this.statusBar = statusBar;
   }
   
 	@Override
 	public void run()
 	{
-		super.run();
-		
-		OutputPanel.getInstance().getTabbedPane().removeAll();
+		panel.removeAll();
 
 		NgramAnalyzer analyzer = new NgramAnalyzer(text);
 		createTablesForNGrams(analyzer);
 		createTablesForConditionalNGrams(analyzer);
 		
-		StatusBar.getInstance().setMessage("Process complete!");
+		setStatusBarMessage("Process complete!");
 	}
+
+  private void createTablesForNGrams(NgramAnalyzer analyzer) {
+    setStatusBarMessage("Generating n-gram reports...");
+    getProgressBar().setMaximum(3);
+    for (int length = 1; length < 4; length++)
+    {
+      createTableForNGramsOfLength(length, analyzer);
+      getProgressBar().setValue(length);
+    }
+  }
 
   private void createTablesForConditionalNGrams(NgramAnalyzer analyzer) {
     ConditionalNGramFactory factory = new ConditionalNGramFactory(analyzer);
     createTableForConditionalNGramsOfBaseLength(1, factory);
     createTableForConditionalNGramsOfBaseLength(2, factory);
-  }
-
-  private void createTablesForNGrams(NgramAnalyzer analyzer) {
-    StatusBar.getInstance().setMessage("Generating n-gram reports...");
-		StatusBar.getInstance().getProgressBar().setMaximum(3);
-		for (int length = 1; length < 4; length++)
-		{
-			createTableForNGramsOfLength(length, analyzer);
-			StatusBar.getInstance().getProgressBar().setValue(length);
-		}
   }
 
   private void createTableForNGramsOfLength(int length, NgramAnalyzer analyzer) {
@@ -72,20 +76,25 @@ public class NgramsThread extends Thread
     	tableModel.addRow(new String[] {String.valueOf(i), counters[i].toString(), probability});
     }
     
-    String labelOfTable = String.format("%s-gram", length);
+    String labelOfTable = getLabelForNGramOfLength(length);
     addTableWithLabel(tableModel, labelOfTable);
   }
 	
 	private void createTableForConditionalNGramsOfBaseLength(int lengthOfBaseNGram, ConditionalNGramFactory factory)
 	{
-    String label  =  (lengthOfBaseNGram + 1) + "-gram";
-		StatusBar.getInstance().setMessage("Generating conditional " + label + "s ...");
-		ProgressBarProgressListener progressListener = new ProgressBarProgressListener(StatusBar.getInstance().getProgressBar());
+    String label = getLabelForNGramOfLength(lengthOfBaseNGram + 1);
+    setStatusBarMessage("Generating conditional " + label + "s ...");
+		ProgressBarProgressListener progressListener = new ProgressBarProgressListener(getProgressBar());
 		List<ConditionalNGram> conditionalNGrams = factory.getConditionalNGrams(lengthOfBaseNGram, progressListener);
 
     DefaultTableModel tableModel = createTableForConditionalNGrams(conditionalNGrams);
-		StatusBar.getInstance().setMessage("Generating conditional " + label + " output ...");
+    setStatusBarMessage("Generating conditional " + label + " output ...");
 		addTableWithLabel(tableModel, "Conditional " + label);
+	}
+
+	private String getLabelForNGramOfLength(int length)
+	{
+	  return length + "-gram";
 	}
 
 	private DefaultTableModel createTableForConditionalNGrams(List<ConditionalNGram> conditionalNGrams)
@@ -124,6 +133,14 @@ public class NgramsThread extends Thread
 
 		JScrollPane scroll = new JScrollPane();
 		scroll.getViewport().add(table);
-		OutputPanel.getInstance().getTabbedPane().add(label, scroll);
+		panel.add(label, scroll);
 	}
+
+  private void setStatusBarMessage(String message) {
+    statusBar.setMessage(message);
+  }
+
+  private JProgressBar getProgressBar() {
+    return statusBar.getProgressBar();
+  }
 }
