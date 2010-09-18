@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JTabbedPane;
 
 import br.ufpb.ngrams.gui.ContentPanel;
-import br.ufpb.ngrams.gui.NgramsThread;
+import br.ufpb.ngrams.gui.CreateStatisticsThread;
 import br.ufpb.ngrams.gui.OutputPanel;
 import br.ufpb.ngrams.gui.StatusBar;
 
@@ -16,7 +16,7 @@ public class ProcessTextListener implements ActionListener
 	{
     String text = ContentPanel.getInstance().getTextArea().getText();
     JTabbedPane panel = OutputPanel.getInstance().getTabbedPane();
-		NgramsThread thread = new NgramsThread(text,panel, StatusBar.getInstance());
+    CreateStatisticsThread thread = new CreateStatisticsThread(text,panel, StatusBar.getInstance());
 		thread.start();
 	}
 }
