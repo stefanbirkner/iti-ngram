@@ -13,11 +13,6 @@ public class Text
 		this.attributes = attributes;
 	}
 	
-	public String process()
-	{
-		return process(this.content, this.attributes);
-	}
-	
 	public static boolean isValid(char ch, Attributes attributes)
 	{
 		if (attributes.getIgnoredCharacters().contains(new Character(ch)) ||
@@ -36,14 +31,14 @@ public class Text
 		return true;
 	}
 	
-	public static String process(String input, Attributes attributes)
+	public String process()
 	{
 		StringBuilder output = new StringBuilder();
-		StatusBar.getInstance().startForNumberOfSteps(input.length());
+		StatusBar.getInstance().startForNumberOfSteps(content.length());
 		
-		for (int i = 0; i < input.length(); i++)
+		for (int i = 0; i < content.length(); i++)
 		{			
-			char ch = input.charAt(i);
+			char ch = content.charAt(i);
 			
 			if (isValid(ch, attributes))
 			{
@@ -51,9 +46,9 @@ public class Text
 				{
 					int tempa = i + 1;
 					int tempb = i + 2;
-					if (i + 2 < input.length() && ch == input.charAt(tempa) && ch == input.charAt(tempb))
+					if (i + 2 < content.length() && ch == content.charAt(tempa) && ch == content.charAt(tempb))
 					{
-						while (i < input.length() && ch == input.charAt(i)) { i++; }
+						while (i < content.length() && ch == content.charAt(i)) { i++; }
 						i--;
 						continue;
 					}

@@ -8,13 +8,11 @@ public class ValidateTextThread extends Thread
 	@Override
 	public void run()
 	{
-		super.run();
-		
 		StatusBar.getInstance().setMessage("Processing...");
 		
 		String input = ContentPanel.getInstance().getTextArea().getText();
-		String output = Text.process(input, Attributes.getInstance());
-		ContentPanel.getInstance().getTextArea().setText(output);
+		Text text = new Text(input, Attributes.getInstance());
+		ContentPanel.getInstance().getTextArea().setText(text.process());
 		
 		StatusBar.getInstance().setMessage("Process complete!");
 	}
