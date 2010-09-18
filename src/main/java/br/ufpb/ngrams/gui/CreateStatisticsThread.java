@@ -21,14 +21,14 @@ import br.ufpb.ngrams.Probability;
 import br.ufpb.ngrams.SortConditionalNGramsByProbabilityDescending;
 import br.ufpb.ngrams.SortNGramCountersByCountsDescending;
 
-public class NgramsThread extends Thread
+public class CreateStatisticsThread extends Thread
 {
   private static final Font FIXED_WIDTH_FONT = new Font( "Monospaced", Font.PLAIN, 12 );
   private final String text;
   private final JTabbedPane panel;
   private final StatusBar statusBar;
   
-  public NgramsThread(String text, JTabbedPane panel, StatusBar statusBar)
+  public CreateStatisticsThread(String text, JTabbedPane panel, StatusBar statusBar)
   {
     this.text = text;
     this.panel = panel;
