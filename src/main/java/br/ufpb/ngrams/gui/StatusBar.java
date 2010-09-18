@@ -6,20 +6,27 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-public class StatusBar extends JPanel
+import br.ufpb.ngrams.ProgressListener;
+
+public class StatusBar extends JPanel implements ProgressListener
 {
-	private static final long serialVersionUID = -3459030279106440133L;
+	private static final long serialVersionUID = -3459030279106440132L;
 
 	private static StatusBar instance = null;
-	private JLabel labelMessage;
-	private JProgressBar progressBar;
+	private final JLabel labelMessage;
+	private final JProgressBar progressBar;
 	
 	private StatusBar()
 	{
-		this.init();
-		this.setMessage(new String());
+    setLayout(new FlowLayout(FlowLayout.LEFT));
+    labelMessage = new JLabel();
+    progressBar = new JProgressBar();
+    add(progressBar);
+    add(labelMessage);
+
+		setMessage("");
 	}
-	
+
 	public static StatusBar getInstance()
 	{
 		if (instance == null) {
@@ -27,24 +34,26 @@ public class StatusBar extends JPanel
 		}
 		return instance;
 	}
-	
-	private void init()
-	{
-		this.setLayout(new FlowLayout(FlowLayout.LEFT));
-		this.labelMessage = new JLabel();
-		this.progressBar = new JProgressBar();
-		this.add(this.progressBar);
-		this.add(this.labelMessage);
-	}
-	
+
 	public void setMessage(String message)
 	{
-		if (new String().equals(message)){ labelMessage.setText(new String(" ")); }
-		else { labelMessage.setText(message); }
+		if ("".equals(message))
+		{
+		  message = " ";
+		}
+		
+		labelMessage.setText(message);
 	}
-	
-	public JProgressBar getProgressBar()
-	{
-		return this.progressBar;
-	}
+
+  @Override
+  public void startForNumberOfSteps(int n) {
+    progressBar.setValue(0);
+    progressBar.setMaximum(n);
+  }
+
+  @Override
+  public void nextStep() {
+    int nextValue = progressBar.getValue() + 1;
+    progressBar.setValue(nextValue);
+  }
 }

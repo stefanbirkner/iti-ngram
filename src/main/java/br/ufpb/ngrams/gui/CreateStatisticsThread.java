@@ -6,7 +6,6 @@ import static java.util.Collections.sort;
 import java.awt.Font;
 import java.util.List;
 
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -49,11 +48,11 @@ public class CreateStatisticsThread extends Thread
 
   private void createTablesForNGrams(NgramAnalyzer analyzer) {
     setStatusBarMessage("Generating n-gram reports...");
-    getProgressBar().setMaximum(3);
+    statusBar.startForNumberOfSteps(3);
     for (int length = 1; length < 4; length++)
     {
       createTableForNGramsOfLength(length, analyzer);
-      getProgressBar().setValue(length);
+      statusBar.nextStep();
     }
   }
 
@@ -84,8 +83,7 @@ public class CreateStatisticsThread extends Thread
 	{
     String label = getLabelForNGramOfLength(lengthOfBaseNGram + 1);
     setStatusBarMessage("Generating conditional " + label + "s ...");
-		ProgressBarProgressListener progressListener = new ProgressBarProgressListener(getProgressBar());
-		List<ConditionalNGram> conditionalNGrams = factory.getConditionalNGrams(lengthOfBaseNGram, progressListener);
+		List<ConditionalNGram> conditionalNGrams = factory.getConditionalNGrams(lengthOfBaseNGram, statusBar);
 
     DefaultTableModel tableModel = createTableForConditionalNGrams(conditionalNGrams);
     setStatusBarMessage("Generating conditional " + label + " output ...");
@@ -138,9 +136,5 @@ public class CreateStatisticsThread extends Thread
 
   private void setStatusBarMessage(String message) {
     statusBar.setMessage(message);
-  }
-
-  private JProgressBar getProgressBar() {
-    return statusBar.getProgressBar();
   }
 }

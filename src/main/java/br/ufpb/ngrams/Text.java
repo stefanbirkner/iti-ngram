@@ -1,13 +1,11 @@
 package br.ufpb.ngrams;
 
-import javax.swing.JProgressBar;
-
 import br.ufpb.ngrams.gui.StatusBar;
 
 public class Text
 {
-	private String content;
-	private Attributes attributes;
+	private final String content;
+	private final Attributes attributes;
 	
 	public Text(String content, Attributes attributes)
 	{
@@ -17,7 +15,7 @@ public class Text
 	
 	public String process()
 	{
-		return Text.process(this.content, this.attributes);
+		return process(this.content, this.attributes);
 	}
 	
 	public static boolean isValid(char ch, Attributes attributes)
@@ -41,14 +39,11 @@ public class Text
 	public static String process(String input, Attributes attributes)
 	{
 		StringBuilder output = new StringBuilder();
-	
-		JProgressBar progress = StatusBar.getInstance().getProgressBar();
-		progress.setMaximum(input.length());
+		StatusBar.getInstance().startForNumberOfSteps(input.length());
 		
-		char ch;
 		for (int i = 0; i < input.length(); i++)
 		{			
-			ch = input.charAt(i);
+			char ch = input.charAt(i);
 			
 			if (isValid(ch, attributes))
 			{
@@ -73,7 +68,7 @@ public class Text
 				output.append(ch);
 			}
 
-			progress.setValue(i + 1);
+			StatusBar.getInstance().nextStep();
 		}
 		
 		return output.toString();
