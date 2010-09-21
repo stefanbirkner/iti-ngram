@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
+import br.ufpb.ngrams.gui.components.StartButton;
 import br.ufpb.ngrams.gui.listeners.OpenFileListener;
 import br.ufpb.ngrams.gui.listeners.ProcessTextListener;
 import br.ufpb.ngrams.gui.listeners.SetupListener;
@@ -19,17 +20,25 @@ class MainToolBar extends JToolBar
 
 	MainToolBar()
 	{
-		super.setLayout(new FlowLayout(FlowLayout.LEFT));
+		setLayout(new FlowLayout(FlowLayout.LEFT));
 		addButton(ButtonConfig.FOLDER, new OpenFileListener(ContentPanel.getInstance().getTextArea()));
 		addButton(ButtonConfig.SETUP, new SetupListener());
 		addButton(ButtonConfig.VALIDATE, new ValidateTextListener());
-		addButton(ButtonConfig.START, new ProcessTextListener());
+		addStartButton();
 	}
-	
-	private void addButton(ButtonConfig config, ActionListener listener)
-	{
-		JButton button = createButton(config);
-		button.addActionListener(listener);
-		super.add(button);
-	}
+  
+  private void addButton(ButtonConfig config, ActionListener listener)
+  {
+    JButton button = createButton(config);
+    button.addActionListener(listener);
+    add(button);
+  }
+
+  private void addStartButton()
+  {
+    StartButton button = new StartButton();
+    button.addActionListener(new ProcessTextListener());
+    button.setToolTipText(ButtonConfig.START.toolTipText);
+		add(button);
+  }
 }
