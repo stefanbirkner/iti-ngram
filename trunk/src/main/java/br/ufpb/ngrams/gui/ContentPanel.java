@@ -35,8 +35,8 @@ public class ContentPanel extends JPanel
     add(scrollPane);
   }
 
-  public JTextArea getTextArea()
+  public static JTextArea getTextArea()
   {
-    return textArea;
+    return getInstance().textArea;
   }
 }

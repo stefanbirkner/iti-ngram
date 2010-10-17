@@ -21,7 +21,7 @@ class MainToolBar extends JToolBar
 	MainToolBar()
 	{
 		setLayout(new FlowLayout(FlowLayout.LEFT));
-		addButton(ButtonConfig.FOLDER, new OpenFileListener(ContentPanel.getInstance().getTextArea()));
+		addButton(ButtonConfig.FOLDER, new OpenFileListener(ContentPanel.getTextArea()));
 		addButton(ButtonConfig.SETUP, new SetupListener());
 		addButton(ButtonConfig.VALIDATE, new ValidateTextListener());
 		addStartButton();
