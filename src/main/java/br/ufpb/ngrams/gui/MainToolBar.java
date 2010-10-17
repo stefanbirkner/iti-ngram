@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 
 import br.ufpb.ngrams.gui.components.StartButton;
@@ -16,15 +17,15 @@ import br.ufpb.ngrams.gui.listeners.ValidateTextListener;
 
 class MainToolBar extends JToolBar
 {
-	private static final long serialVersionUID = 999566304598748207L;
+	private static final long serialVersionUID = 999566304598748208L;
 
-	MainToolBar()
+	MainToolBar(JTextArea textArea)
 	{
 		setLayout(new FlowLayout(FlowLayout.LEFT));
-		addButton(ButtonConfig.FOLDER, new OpenFileListener(ContentPanel.getTextArea()));
+		addButton(ButtonConfig.FOLDER, new OpenFileListener(textArea));
 		addButton(ButtonConfig.SETUP, new SetupListener());
-		addButton(ButtonConfig.VALIDATE, new ValidateTextListener());
-		addStartButton();
+		addButton(ButtonConfig.VALIDATE, new ValidateTextListener(textArea));
+		addStartButton(textArea);
 	}
   
   private void addButton(ButtonConfig config, ActionListener listener)
@@ -34,10 +35,10 @@ class MainToolBar extends JToolBar
     add(button);
   }
 
-  private void addStartButton()
+  private void addStartButton(JTextArea textArea)
   {
     StartButton button = new StartButton();
-    button.addActionListener(new ProcessTextListener());
+    button.addActionListener(new ProcessTextListener(textArea));
     button.setToolTipText(ButtonConfig.START.toolTipText);
 		add(button);
   }
