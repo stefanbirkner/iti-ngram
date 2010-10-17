@@ -4,6 +4,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextArea;
 
 import br.ufpb.ngrams.MainProperties;
 import br.ufpb.ngrams.gui.listeners.AboutListener;
@@ -12,7 +13,7 @@ import br.ufpb.ngrams.gui.listeners.SetupListener;
 
 public class MainMenuBar extends JMenuBar
 {
-	private static final long serialVersionUID = -6442019048135737578L;
+	private static final long serialVersionUID = -6442019048135737577L;
 
 	private JMenu menuFile;
 	private JMenu menuNgrams;
@@ -23,26 +24,21 @@ public class MainMenuBar extends JMenuBar
 	private JMenuItem itemSetup;
 	private JMenuItem itemAbout;
 	
-	public MainMenuBar()
+	public MainMenuBar(JTextArea textArea)
 	{
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		this.init();
-	}
-	
-	private void init()
-	{
-		this.initMenuFile();
+		this.initMenuFile(textArea);
 		this.initMenuNgrams();
 		this.initMenuHelp();
 	}
 	
-	private void initMenuFile()
+	private void initMenuFile(JTextArea textArea)
 	{
 		menuFile = new JMenu(MainProperties.MENU_FILE);
 		this.add(menuFile);
 		
 		itemOpen = new JMenuItem(MainProperties.MENU_FILE_OPEN);
-		itemOpen.addActionListener(new OpenFileListener(ContentPanel.getTextArea()));
+		itemOpen.addActionListener(new OpenFileListener(textArea));
 		menuFile.add(itemOpen);
 		menuFile.addSeparator();
 		

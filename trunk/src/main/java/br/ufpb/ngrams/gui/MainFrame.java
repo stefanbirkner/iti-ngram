@@ -10,18 +10,19 @@ import br.ufpb.ngrams.Attributes;
 
 public class MainFrame extends JFrame
 {
-	private static final long serialVersionUID = 3354879614300145036L;
+	private static final long serialVersionUID = 3354879614300145037L;
 	private static final String FILENAME_NGRAMS = "br/ufpb/ngrams/resources/icons/ngrams.png";
 
 	private JSplitPane splitPane;
 	private MainMenuBar mainMenu;
 	private MainToolBar mainToolBar;
+	private final ContentPanel contentPanel = new ContentPanel();
 	
 	public MainFrame(String title, int width, int height)
 	{
 		super(title);
-		super.setIconImage(Toolkit.getDefaultToolkit().createImage(ClassLoader.getSystemResource(FILENAME_NGRAMS)));
-		super.setSize(width, height);
+		setIconImage(Toolkit.getDefaultToolkit().createImage(ClassLoader.getSystemResource(FILENAME_NGRAMS)));
+		setSize(width, height);
 		this.init();
 		this.initSetup();
 		super.setVisible(true);
@@ -44,20 +45,20 @@ public class MainFrame extends JFrame
 		this.splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		this.splitPane.setDividerLocation(splitLocation);
 		this.splitPane.setOneTouchExpandable(true);
-		this.splitPane.setTopComponent(ContentPanel.getInstance());
+		this.splitPane.setTopComponent(contentPanel);
 		this.splitPane.setBottomComponent(OutputPanel.getInstance());
 		this.getContentPane().add(splitPane, BorderLayout.CENTER);
 	}
 	
 	private void initToolBar()
 	{
-		this.mainToolBar = new MainToolBar();
+		this.mainToolBar = new MainToolBar(contentPanel.getTextArea());
 		this.getContentPane().add(mainToolBar, BorderLayout.NORTH);
 	}
 	
 	private void initMenu()
 	{
-		this.mainMenu = new MainMenuBar();
+		this.mainMenu = new MainMenuBar(contentPanel.getTextArea());
 		this.setJMenuBar(mainMenu);
 	}
 	

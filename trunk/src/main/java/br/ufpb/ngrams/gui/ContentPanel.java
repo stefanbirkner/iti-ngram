@@ -8,24 +8,14 @@ import javax.swing.JTextArea;
 
 public class ContentPanel extends JPanel
 {
-  private static final long serialVersionUID = 1093998575730432279L;
+  private static final long serialVersionUID = 1093998575730432280L;
 
-  private static ContentPanel instance = null;
   private final JTextArea textArea = new JTextArea();
 
-  private ContentPanel()
+  public ContentPanel()
   {
     setLayout(new GridLayout(1, 1));
     createScrollPane();
-  }
-
-  public static ContentPanel getInstance()
-  {
-    if (instance == null)
-    {
-      instance = new ContentPanel();
-    }
-    return instance;
   }
 
   private void createScrollPane()
@@ -35,8 +25,8 @@ public class ContentPanel extends JPanel
     add(scrollPane);
   }
 
-  public static JTextArea getTextArea()
+  public JTextArea getTextArea()
   {
-    return getInstance().textArea;
+    return textArea;
   }
 }
