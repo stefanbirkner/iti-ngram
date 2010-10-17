@@ -10,9 +10,9 @@ public class ValidateTextThread extends Thread
 	{
 		StatusBar.getInstance().setMessage("Processing...");
 		
-		String input = ContentPanel.getInstance().getTextArea().getText();
+		String input = ContentPanel.getTextArea().getText();
 		Text text = new Text(input, Attributes.getInstance());
-		ContentPanel.getInstance().getTextArea().setText(text.process());
+		ContentPanel.getTextArea().setText(text.process());
 		
 		StatusBar.getInstance().setMessage("Process complete!");
 	}

@@ -14,9 +14,9 @@ public class ProcessTextListener implements ActionListener
 {
 	public void actionPerformed(ActionEvent e)
 	{
-    String text = ContentPanel.getInstance().getTextArea().getText();
+    String text = ContentPanel.getTextArea().getText();
     JTabbedPane panel = OutputPanel.getInstance().getTabbedPane();
-    CreateStatisticsThread thread = new CreateStatisticsThread(text,panel, StatusBar.getInstance());
+    CreateStatisticsThread thread = new CreateStatisticsThread(text, panel, StatusBar.getInstance());
 		thread.start();
 	}
 }

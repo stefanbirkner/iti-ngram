@@ -42,7 +42,7 @@ public class MainMenuBar extends JMenuBar
 		this.add(menuFile);
 		
 		itemOpen = new JMenuItem(MainProperties.MENU_FILE_OPEN);
-		itemOpen.addActionListener(new OpenFileListener(ContentPanel.getInstance().getTextArea()));
+		itemOpen.addActionListener(new OpenFileListener(ContentPanel.getTextArea()));
 		menuFile.add(itemOpen);
 		menuFile.addSeparator();
 		
