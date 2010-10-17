@@ -13,55 +13,46 @@ import br.ufpb.ngrams.gui.listeners.SetupListener;
 
 public class MainMenuBar extends JMenuBar
 {
-	private static final long serialVersionUID = -6442019048135737577L;
-
-	private JMenu menuFile;
-	private JMenu menuNgrams;
-	private JMenu menuHelp;
-	
-	private JMenuItem itemOpen;
-	private JMenuItem itemExit;
-	private JMenuItem itemSetup;
-	private JMenuItem itemAbout;
+	private static final long serialVersionUID = -6442019048135737576L;
 	
 	public MainMenuBar(JTextArea textArea)
 	{
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		this.initMenuFile(textArea);
-		this.initMenuNgrams();
-		this.initMenuHelp();
+		initMenuFile(textArea);
+		initMenuNgrams();
+		initMenuHelp();
 	}
 	
 	private void initMenuFile(JTextArea textArea)
 	{
-		menuFile = new JMenu(MainProperties.MENU_FILE);
+	  JMenu menuFile = new JMenu(MainProperties.MENU_FILE);
 		this.add(menuFile);
 		
-		itemOpen = new JMenuItem(MainProperties.MENU_FILE_OPEN);
+		JMenuItem itemOpen = new JMenuItem(MainProperties.MENU_FILE_OPEN);
 		itemOpen.addActionListener(new OpenFileListener(textArea));
 		menuFile.add(itemOpen);
 		menuFile.addSeparator();
 		
-		itemExit = new JMenuItem(MainProperties.MENU_FILE_EXIT);
+		JMenuItem itemExit = new JMenuItem(MainProperties.MENU_FILE_EXIT);
 		menuFile.add(itemExit);
 	}
 	
 	private void initMenuNgrams()
 	{
-		menuNgrams = new JMenu(MainProperties.MENU_NGRAMS);
+	  JMenu menuNgrams = new JMenu(MainProperties.MENU_NGRAMS);
 		this.add(menuNgrams);
 		
-		itemSetup = new JMenuItem(MainProperties.MENU_NGRAMS_SETUP);
+		JMenuItem itemSetup = new JMenuItem(MainProperties.MENU_NGRAMS_SETUP);
 		itemSetup.addActionListener(new SetupListener());
 		menuNgrams.add(itemSetup);
 	}
 	
 	private void initMenuHelp()
 	{
-		menuHelp = new JMenu(MainProperties.MENU_HELP);
+	  JMenu menuHelp = new JMenu(MainProperties.MENU_HELP);
 		this.add(menuHelp);
 		
-		itemAbout = new JMenuItem(MainProperties.MENU_HELP_ABOUT);
+		JMenuItem itemAbout = new JMenuItem(MainProperties.MENU_HELP_ABOUT);
 		itemAbout.addActionListener(new AboutListener());
 		menuHelp.add(itemAbout);
 	}
