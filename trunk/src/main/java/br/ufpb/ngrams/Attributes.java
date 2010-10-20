@@ -5,9 +5,8 @@ import java.util.List;
 
 public class Attributes
 {
-	private static Attributes instance = null;
 	
-	private List<Character> ignoredCharacters;
+	private List<Character> ignoredCharacters = new ArrayList<Character>();
 
 	private boolean ignoreDigits;
 	private boolean ignoreLetters;
@@ -16,20 +15,6 @@ public class Attributes
 	private boolean mergeWhitespaces;
 	private boolean ignoreConsecutive;
 	private boolean convertDowncase;
-	
-	private Attributes()
-	{
-		this.ignoredCharacters = new ArrayList<Character>();
-	}
-	
-	public static Attributes getInstance()
-	{
-		if (instance == null)
-		{
-			instance = new Attributes();
-		}
-		return instance;
-	}
 	
 	public void setAttributes(boolean ignoreDigits, boolean ignoreLetters, boolean ignoreWhitespaces, boolean ignoreSymbols, boolean mergeWhiteSpaces, boolean mergeConsecutive, boolean convertDownCase)
 	{

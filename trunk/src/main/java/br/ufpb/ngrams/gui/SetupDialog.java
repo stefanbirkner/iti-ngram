@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -43,23 +45,20 @@ public class SetupDialog extends JDialog
 	private JButton buttonSave;
 	private JButton buttonCancel;
 	
-	public SetupDialog()
+	private final Attributes configuration;
+	
+	public SetupDialog(Attributes configuration)
 	{
-		this.initAll();
+	  this.configuration = configuration;
+    setTitle(new String(MainProperties.LABEL_SETUP));
+    initComponents();
+    initValues();
+    pack();
+    WindowUtil.centralize(this);
 		setVisible(true);
 	}
 	
-	public void initAll()
-	{
-		setTitle(new String(MainProperties.LABEL_SETUP));
-		setModal(true);
-		this.initComponents();
-		this.initValues();
-		pack();
-		WindowUtil.centralize(this);
-	}
-	
-	public void initComponents()
+	private void initComponents()
 	{
 		panelSetup = new JPanel();
 		panelSetup.setLayout(new GridLayout(7, 2, 5, 5));
@@ -98,18 +97,13 @@ public class SetupDialog extends JDialog
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				Attributes.getInstance().setIgnoreLetters(cIgnoreLetters.isSelected());
-				Attributes.getInstance().setIgnoreDigits(cIgnoreDigits.isSelected());
-				Attributes.getInstance().setIgnoreSymbols(cIgnoreSymbols.isSelected());
-				Attributes.getInstance().setIgnoreWhitespaces(cIgnoreWhitespaces.isSelected());
-				Attributes.getInstance().setIgnoreConsecutive(cIgnoreConsecutive.isSelected());
-				Attributes.getInstance().setMergeWhitespaces(cMergeWhiteSpaces.isSelected());
-				
-				Attributes.getInstance().getIgnoredCharacters().clear();
-				for (char c : tIgnoredCharacters.getText().toCharArray())
-				{
-					Attributes.getInstance().getIgnoredCharacters().add(new Character(c));
-				}
+			  configuration.setIgnoreLetters(cIgnoreLetters.isSelected());
+			  configuration.setIgnoreDigits(cIgnoreDigits.isSelected());
+			  configuration.setIgnoreSymbols(cIgnoreSymbols.isSelected());
+			  configuration.setIgnoreWhitespaces(cIgnoreWhitespaces.isSelected());
+			  configuration.setIgnoreConsecutive(cIgnoreConsecutive.isSelected());
+			  configuration.setMergeWhitespaces(cMergeWhiteSpaces.isSelected());
+				configuration.setIgnoredCharacters(getIgnoredCharacters());
 				
 				close();
 			}
@@ -148,22 +142,32 @@ public class SetupDialog extends JDialog
 	
 	private void close()
 	{
-		this.dispose();
+		dispose();
 	}
 	
 	private void initValues()
 	{
-		this.cIgnoreLetters.setSelected(Attributes.getInstance().isIgnoreLetters());
-		this.cIgnoreDigits.setSelected(Attributes.getInstance().isIgnoreDigits());
-		this.cIgnoreWhitespaces.setSelected(Attributes.getInstance().isIgnoreWhitespaces());
-		this.cIgnoreConsecutive.setSelected(Attributes.getInstance().isIgnoreConsecutive());
-		this.cIgnoreSymbols.setSelected(Attributes.getInstance().isIgnoreSymbols());
-		this.cMergeWhiteSpaces.setSelected(Attributes.getInstance().isMergeWhitespaces());
+		this.cIgnoreLetters.setSelected(configuration.isIgnoreLetters());
+		this.cIgnoreDigits.setSelected(configuration.isIgnoreDigits());
+		this.cIgnoreWhitespaces.setSelected(configuration.isIgnoreWhitespaces());
+		this.cIgnoreConsecutive.setSelected(configuration.isIgnoreConsecutive());
+		this.cIgnoreSymbols.setSelected(configuration.isIgnoreSymbols());
+		this.cMergeWhiteSpaces.setSelected(configuration.isMergeWhitespaces());
 		
 		String characters = new String();
-		for (Character c : Attributes.getInstance().getIgnoredCharacters()) {
+		for (Character c : configuration.getIgnoredCharacters()) {
 			characters += c;
 		}
 		this.tIgnoredCharacters.setText(characters);
 	}
+
+  private List<Character> getIgnoredCharacters()
+  {
+    List<Character> ignoredCharacters = new ArrayList<Character>();
+    for (char c : tIgnoredCharacters.getText().toCharArray())
+    {
+      ignoredCharacters.add(c);
+    }
+    return ignoredCharacters;
+  }
 }

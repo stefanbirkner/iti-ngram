@@ -21,19 +21,20 @@ public class MainFrame extends JFrame
 	public MainFrame(String title, int width, int height)
 	{
 		super(title);
+    Attributes configuration = new Attributes();
 		setIconImage(Toolkit.getDefaultToolkit().createImage(ClassLoader.getSystemResource(FILENAME_NGRAMS)));
 		setSize(width, height);
-		this.init();
-		this.initSetup();
-		super.setVisible(true);
+		init(configuration);
+		initSetup(configuration);
+		setVisible(true);
 	}
 	
-	private void init()
+	private void init(Attributes configuration)
 	{
 		this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-		this.initMenu();
+		this.initMenu(configuration);
 		this.initSplitPane();
-		this.initToolBar();
+		this.initToolBar(configuration);
 		this.getContentPane().add(StatusBar.getInstance(), BorderLayout.SOUTH);
 		WindowUtil.centralize(this);
 	}
@@ -50,20 +51,20 @@ public class MainFrame extends JFrame
 		this.getContentPane().add(splitPane, BorderLayout.CENTER);
 	}
 	
-	private void initToolBar()
+	private void initToolBar(Attributes configuration)
 	{
-		this.mainToolBar = new MainToolBar(contentPanel.getTextArea());
+		this.mainToolBar = new MainToolBar(contentPanel.getTextArea(), configuration);
 		this.getContentPane().add(mainToolBar, BorderLayout.NORTH);
 	}
 	
-	private void initMenu()
+	private void initMenu(Attributes configuration)
 	{
-		this.mainMenu = new MainMenuBar(contentPanel.getTextArea());
+		this.mainMenu = new MainMenuBar(contentPanel.getTextArea(), configuration);
 		this.setJMenuBar(mainMenu);
 	}
 	
-	private void initSetup()
+	private void initSetup(Attributes configuration)
 	{
-		Attributes.getInstance().setAttributes(true, false, false, true, true, false, true);
+	  configuration.setAttributes(true, false, false, true, true, false, true);
 	}
 }

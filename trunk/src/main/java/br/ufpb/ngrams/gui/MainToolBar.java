@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 
+import br.ufpb.ngrams.Attributes;
 import br.ufpb.ngrams.gui.components.StartButton;
 import br.ufpb.ngrams.gui.listeners.OpenFileListener;
 import br.ufpb.ngrams.gui.listeners.ProcessTextListener;
@@ -19,12 +20,12 @@ class MainToolBar extends JToolBar
 {
 	private static final long serialVersionUID = 999566304598748208L;
 
-	MainToolBar(JTextArea textArea)
+	MainToolBar(JTextArea textArea, Attributes configuration)
 	{
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		addButton(ButtonConfig.FOLDER, new OpenFileListener(textArea));
-		addButton(ButtonConfig.SETUP, new SetupListener());
-		addButton(ButtonConfig.VALIDATE, new ValidateTextListener(textArea));
+		addButton(ButtonConfig.SETUP, new SetupListener(configuration));
+		addButton(ButtonConfig.VALIDATE, new ValidateTextListener(textArea, configuration));
 		addStartButton(textArea);
 	}
   
