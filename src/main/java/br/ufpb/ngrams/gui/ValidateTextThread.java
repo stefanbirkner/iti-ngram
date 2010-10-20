@@ -8,10 +8,12 @@ import br.ufpb.ngrams.Text;
 public class ValidateTextThread extends Thread
 {
   private final JTextArea textArea;
+  private final Attributes configuration;
   
-	public ValidateTextThread(JTextArea textArea)
+	public ValidateTextThread(JTextArea textArea, Attributes configuration)
   {
     this.textArea = textArea;
+    this.configuration = configuration;
   }
 
   @Override
@@ -20,7 +22,7 @@ public class ValidateTextThread extends Thread
 		StatusBar.getInstance().setMessage("Processing...");
 		
 		String input = textArea.getText();
-		Text text = new Text(input, Attributes.getInstance());
+		Text text = new Text(input, configuration);
 		textArea.setText(text.process());
 		
 		StatusBar.getInstance().setMessage("Process complete!");

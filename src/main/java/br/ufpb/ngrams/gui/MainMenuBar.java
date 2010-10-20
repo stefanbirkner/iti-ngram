@@ -6,6 +6,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextArea;
 
+import br.ufpb.ngrams.Attributes;
 import br.ufpb.ngrams.MainProperties;
 import br.ufpb.ngrams.gui.listeners.AboutListener;
 import br.ufpb.ngrams.gui.listeners.OpenFileListener;
@@ -15,11 +16,11 @@ public class MainMenuBar extends JMenuBar
 {
 	private static final long serialVersionUID = -6442019048135737576L;
 	
-	public MainMenuBar(JTextArea textArea)
+	public MainMenuBar(JTextArea textArea, Attributes configuration)
 	{
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		initMenuFile(textArea);
-		initMenuNgrams();
+		initMenuNgrams(configuration);
 		initMenuHelp();
 	}
 	
@@ -37,13 +38,13 @@ public class MainMenuBar extends JMenuBar
 		menuFile.add(itemExit);
 	}
 	
-	private void initMenuNgrams()
+	private void initMenuNgrams(Attributes configuration)
 	{
 	  JMenu menuNgrams = new JMenu(MainProperties.MENU_NGRAMS);
 		this.add(menuNgrams);
 		
 		JMenuItem itemSetup = new JMenuItem(MainProperties.MENU_NGRAMS_SETUP);
-		itemSetup.addActionListener(new SetupListener());
+		itemSetup.addActionListener(new SetupListener(configuration));
 		menuNgrams.add(itemSetup);
 	}
 	
