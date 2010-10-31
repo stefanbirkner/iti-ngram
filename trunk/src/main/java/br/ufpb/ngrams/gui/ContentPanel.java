@@ -6,11 +6,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import br.ufpb.ngrams.gui.components.TextAreaWithDropSupport;
+
 public class ContentPanel extends JPanel
 {
   private static final long serialVersionUID = 1093998575730432280L;
 
-  private final JTextArea textArea = new JTextArea();
+  private final JTextArea textArea = new TextAreaWithDropSupport();
 
   public ContentPanel()
   {
