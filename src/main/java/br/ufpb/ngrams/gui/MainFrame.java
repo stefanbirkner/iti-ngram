@@ -28,7 +28,6 @@ public class MainFrame extends JFrame
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		init(configuration);
 		initSetup(configuration);
-		setVisible(true);
 	}
 	
 	private void init(Attributes configuration)
