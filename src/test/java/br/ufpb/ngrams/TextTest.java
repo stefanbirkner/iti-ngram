@@ -10,7 +10,6 @@ public class TextTest
 	public void shouldNotChangeTextWhenNoAttributeIsSelected()
 	{
     Attributes attributes = new Attributes();
-    attributes.setAttributes(false, false, false, false, false, false, false);
 		Text text = new Text("abc", attributes);
 		assertEquals("abc", text.process());
 	}
@@ -19,7 +18,7 @@ public class TextTest
 	public void testProcessStringIgnoreDigits()
 	{
     Attributes attributes = new Attributes();
-		attributes.setAttributes(true, false, false, false, false, false, false);
+    attributes.ignoreDigits = true;
 		
 		assertEquals("",   process("1234567890",   attributes));
 		assertEquals("",   process("0987654321",   attributes));
@@ -35,7 +34,7 @@ public class TextTest
 	public void testProcessStringIgnoreLetters()
 	{
     Attributes attributes = new Attributes();
-		attributes.setAttributes(false, true, false, false, false, false, false);
+    attributes.ignoreLetters = true;
 		
 		assertEquals("",   process("abcdefghijklmnopqrstuvxwz",   attributes));
 		assertEquals("",   process("abcdefghijklmnopqrstuvxwz",   attributes));
@@ -53,7 +52,7 @@ public class TextTest
 	public void testProcessStringIgnoreWhitespaces()
 	{
     Attributes attributes = new Attributes();
-		attributes.setAttributes(false, false, true, false, false, false, false);
+    attributes.ignoreWhitespaces = true;
 		
 		String abc = "abc";
 		assertEquals(abc, process("abc",     attributes));
@@ -70,7 +69,7 @@ public class TextTest
 	public void testProcessStringIgnoreSymbols()
 	{
     Attributes attributes = new Attributes();
-		attributes.setAttributes(false, false, false, true, false, false, false);
+    attributes.ignoreSymbols = true;
 		
 		String abc = "abc";
 		assertEquals(abc, process("!@#$%^&*()_+-={}|[]\\:',./<>?~`abc", attributes));
@@ -84,7 +83,7 @@ public class TextTest
 	public void testProcessStringIgnoreConsecute()
 	{
     Attributes attributes = new Attributes();
-		attributes.setAttributes(false, false, false, false, false, true, false);
+    attributes.ignoreConsecutive = true;
 		
 		assertEquals("abc", process("============abc", attributes));
 		assertEquals("abc", process("abc============", attributes));
@@ -96,7 +95,7 @@ public class TextTest
 	public void testProcessStringMergeWhitespaces()
 	{
     Attributes attributes = new Attributes();
-		attributes.setAttributes(false, false, false, false, true, false, false);
+    attributes.mergeWhitespaces = true;
 		
 		assertEquals(" ",    process(" ",      attributes));
 		assertEquals(" ",    process("  ",     attributes));
@@ -112,7 +111,8 @@ public class TextTest
 	public void testProcessStringMergeWhitespacesIgnoreSymbols()
 	{
     Attributes attributes = new Attributes();
-		attributes.setAttributes(false, false, false, true, true, false, false);
+    attributes.ignoreSymbols = true;
+    attributes.mergeWhitespaces = true;
 
 		assertEquals(" ", process(" ! ",   attributes));
 		assertEquals(" ", process(" % ! ", attributes));
@@ -122,7 +122,8 @@ public class TextTest
 	public void testProcessStringMergeWhitespacesIgnoreLetter()
 	{
     Attributes attributes = new Attributes();
-		attributes.setAttributes(false, true, false, false, true, false, false);
+    attributes.ignoreLetters = true;
+    attributes.mergeWhitespaces = true;
 
 		assertEquals(" ", process(" a ",   attributes));
 		assertEquals(" ", process(" a b ", attributes));
