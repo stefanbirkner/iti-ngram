@@ -13,17 +13,4 @@ public class Attributes
   public boolean mergeWhitespaces;
   public boolean ignoreConsecutive;
   public boolean convertDowncase;
-
-  public void setAttributes(boolean ignoreDigits, boolean ignoreLetters, boolean ignoreWhitespaces,
-      boolean ignoreSymbols, boolean mergeWhiteSpaces, boolean mergeConsecutive,
-      boolean convertDownCase)
-  {
-    this.ignoreDigits = ignoreDigits;
-    this.ignoreLetters = ignoreLetters;
-    this.ignoreWhitespaces = ignoreWhitespaces;
-    this.ignoreSymbols = ignoreSymbols;
-    this.mergeWhitespaces = mergeWhiteSpaces;
-    this.ignoreConsecutive = mergeConsecutive;
-    this.convertDowncase = convertDownCase;
-  }
 }
