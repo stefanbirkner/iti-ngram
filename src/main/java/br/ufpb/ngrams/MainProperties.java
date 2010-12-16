@@ -10,8 +10,6 @@ public class MainProperties
 	public static final String VERSION = getProperty("ngrams.version");
 	
 	public static final String MAINWINDOW_TITLE = getProperty("ngrams.mainwindow.title");
-	public static final String MAINWINDOW_WIDTH = getProperty("ngrams.mainwindow.width");
-	public static final String MAINWINDOW_HEIGHT = getProperty("ngrams.mainwindow.height");
 	
 	public static final String MENU_FILE = getProperty("ngrams.menu.file");
 	public static final String MENU_FILE_OPEN = getProperty("ngrams.menu.file.open");

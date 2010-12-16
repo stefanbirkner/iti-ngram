@@ -10,7 +10,9 @@ import br.ufpb.ngrams.Attributes;
 
 public class MainFrame extends JFrame
 {
-	private static final long serialVersionUID = 3354879614300145037L;
+	private static final long serialVersionUID = 3354879614300145038L;
+  private static final int DEFAULT_WIDTH = 800;
+  private static final int DEFAULT_HEIGHT = 600;
 	private static final String FILENAME_NGRAMS = "br/ufpb/ngrams/resources/icons/ngrams.png";
 
 	private JSplitPane splitPane;
@@ -18,12 +20,12 @@ public class MainFrame extends JFrame
 	private MainToolBar mainToolBar;
 	private final ContentPanel contentPanel = new ContentPanel();
 	
-	public MainFrame(String title, int width, int height)
+	public MainFrame(String title)
 	{
 		super(title);
     Attributes configuration = new Attributes();
 		setIconImage(Toolkit.getDefaultToolkit().createImage(ClassLoader.getSystemResource(FILENAME_NGRAMS)));
-		setSize(width, height);
+		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		init(configuration);
 		initSetup(configuration);
 		setVisible(true);
