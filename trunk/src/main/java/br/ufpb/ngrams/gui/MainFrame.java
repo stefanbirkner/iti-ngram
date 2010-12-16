@@ -1,9 +1,12 @@
 package br.ufpb.ngrams.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Toolkit;
+import java.net.URL;
 
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JSplitPane;
 
 import br.ufpb.ngrams.Attributes;
@@ -13,54 +16,19 @@ public class MainFrame extends JFrame
   private static final long serialVersionUID = 3354879614300145038L;
   private static final int DEFAULT_WIDTH = 800;
   private static final int DEFAULT_HEIGHT = 600;
-  private static final String FILENAME_NGRAMS = "br/ufpb/ngrams/resources/icons/ngrams.png";
+  private static final String NAME_OF_ICON_IMAGE = "br/ufpb/ngrams/resources/icons/ngrams.png";
 
-  private JSplitPane splitPane;
-  private MainMenuBar mainMenu;
-  private MainToolBar mainToolBar;
   private final ContentPanel contentPanel = new ContentPanel();
 
   public MainFrame(String title)
   {
     super(title);
-    setIconImage(Toolkit.getDefaultToolkit().createImage(
-        ClassLoader.getSystemResource(FILENAME_NGRAMS)));
+    URL iconUrl = ClassLoader.getSystemResource(NAME_OF_ICON_IMAGE);
+    setIconImage(Toolkit.getDefaultToolkit().createImage(iconUrl));
     setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     Attributes configuration = createConfiguration();
-    init(configuration);
-  }
-
-  private void init(Attributes configuration)
-  {
-    this.initMenu(configuration);
-    this.initSplitPane();
-    this.initToolBar(configuration);
-    this.getContentPane().add(StatusBar.getInstance(), BorderLayout.SOUTH);
+    addComponents(configuration);
     WindowUtil.centralize(this);
-  }
-
-  private void initSplitPane()
-  {
-    int splitLocation = super.getHeight() / 2;
-    this.splitPane = new JSplitPane();
-    this.splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-    this.splitPane.setDividerLocation(splitLocation);
-    this.splitPane.setOneTouchExpandable(true);
-    this.splitPane.setTopComponent(contentPanel);
-    this.splitPane.setBottomComponent(OutputPanel.getInstance());
-    this.getContentPane().add(splitPane, BorderLayout.CENTER);
-  }
-
-  private void initToolBar(Attributes configuration)
-  {
-    this.mainToolBar = new MainToolBar(contentPanel.getTextArea(), configuration);
-    this.getContentPane().add(mainToolBar, BorderLayout.NORTH);
-  }
-
-  private void initMenu(Attributes configuration)
-  {
-    this.mainMenu = new MainMenuBar(contentPanel.getTextArea(), configuration);
-    this.setJMenuBar(mainMenu);
   }
 
   private Attributes createConfiguration()
@@ -74,5 +42,37 @@ public class MainFrame extends JFrame
     configuration.ignoreConsecutive = false;
     configuration.convertDowncase = true;
     return configuration;
+  }
+
+  private void addComponents(Attributes configuration)
+  {
+    addMenuBar(configuration);
+    initSplitPane();
+    addToolBar(configuration);
+    getContentPane().add(StatusBar.getInstance(), BorderLayout.SOUTH);
+  }
+
+  private void initSplitPane()
+  {
+    int splitLocation = super.getHeight() / 2;
+    JSplitPane splitPane = new JSplitPane();
+    splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+    splitPane.setDividerLocation(splitLocation);
+    splitPane.setOneTouchExpandable(true);
+    splitPane.setTopComponent(contentPanel);
+    splitPane.setBottomComponent(OutputPanel.getInstance());
+    getContentPane().add(splitPane, BorderLayout.CENTER);
+  }
+
+  private void addToolBar(Attributes configuration)
+  {
+    Component toolBar = new MainToolBar(contentPanel.getTextArea(), configuration);
+    getContentPane().add(toolBar, BorderLayout.NORTH);
+  }
+
+  private void addMenuBar(Attributes configuration)
+  {
+    JMenuBar menuBar = new MainMenuBar(contentPanel.getTextArea(), configuration);
+    setJMenuBar(menuBar);
   }
 }
