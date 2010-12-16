@@ -15,14 +15,14 @@ public class Text
 	
 	public static boolean isValid(char ch, Attributes attributes)
 	{
-		if (attributes.getIgnoredCharacters().contains(new Character(ch)) ||
-				Character.isLetter(ch) && attributes.isIgnoreLetters() ||
-				Character.isDigit(ch) && attributes.isIgnoreDigits() ||
-				Character.isWhitespace(ch) && attributes.isIgnoreWhitespaces())
+		if (attributes.ignoredCharacters.contains(ch) ||
+				Character.isLetter(ch) && attributes.ignoreLetters ||
+				Character.isDigit(ch) && attributes.ignoreDigits ||
+				Character.isWhitespace(ch) && attributes.ignoreWhitespaces)
 		{
 			return false;
 		}
-		else if (attributes.isIgnoreSymbols() &&
+		else if (attributes.ignoreSymbols &&
 				!Character.isLetter(ch) && !Character.isDigit(ch) &&
 				!Character.isWhitespace(ch))
 		{
@@ -42,7 +42,7 @@ public class Text
 			
 			if (isValid(ch, attributes))
 			{
-				if (attributes.isIgnoreConsecutive())
+				if (attributes.ignoreConsecutive)
 				{
 					int tempa = i + 1;
 					int tempb = i + 2;
@@ -53,8 +53,8 @@ public class Text
 						continue;
 					}
 				}
-				if (Character.isLetter(ch) && attributes.isConvertDowncase()) { ch = Character.toLowerCase(ch); }
-				if (Character.isWhitespace(ch) && attributes.isMergeWhitespaces())
+				if (Character.isLetter(ch) && attributes.convertDowncase) { ch = Character.toLowerCase(ch); }
+				if (Character.isWhitespace(ch) && attributes.mergeWhitespaces)
 				{
 					ch = ' ';
 					int temp = output.length() - 1;
