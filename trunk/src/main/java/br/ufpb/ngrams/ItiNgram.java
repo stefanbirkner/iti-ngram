@@ -11,9 +11,7 @@ public class ItiNgram
 			public void run()
 			{
 				String title = String.format("%s - %s", MainProperties.MAINWINDOW_TITLE, MainProperties.VERSION);
-				int width  = Integer.parseInt(MainProperties.MAINWINDOW_WIDTH);
-				int height = Integer.parseInt(MainProperties.MAINWINDOW_HEIGHT);
-				new MainFrame(title, width, height).setVisible(true);
+				new MainFrame(title).setVisible(true);
 			}
 		});
 	}
