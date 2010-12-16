@@ -32,7 +32,6 @@ public class MainFrame extends JFrame
 	
 	private void init(Attributes configuration)
 	{
-		this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		this.initMenu(configuration);
 		this.initSplitPane();
 		this.initToolBar(configuration);
